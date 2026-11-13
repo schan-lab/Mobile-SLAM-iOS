@@ -1,0 +1,38 @@
+{
+  "sourceLanguage": "ja",
+  "strings": {
+    "CFBundleDisplayName": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobile SLAM"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobile SLAM"
+          }
+        }
+      }
+    },
+    "NSLocalNetworkUsageDescription": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used to receive point clouds and IMU data from a Livox Mid-360 connected over wired Ethernet."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有線 LAN でつないだ Livox Mid-360 から点群と IMU を受信するために使います。"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

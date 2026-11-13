@@ -17,7 +17,7 @@ final class LidarReceiver: @unchecked Sendable {
         var lastUdpCnt: Int = -1
         var dataType: Int = -1
         var lidarSrc: String = "-"
-        var lidarInfo: String = "未検出"
+        var lidarInfo: String = L("未検出")
         var lastImu: [Float]? = nil
     }
 
@@ -67,6 +67,7 @@ final class LidarReceiver: @unchecked Sendable {
 
     deinit {
         monitor.cancel()
+        stopDemo()
         stop()
         live_destroy(live)
     }
@@ -111,6 +112,53 @@ final class LidarReceiver: @unchecked Sendable {
         // threads notice `running == false` within the receive timeout; closing afterwards is safe
         // because each thread exits its loop on any error.
         DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) { toClose.forEach { close($0) } }
+    }
+
+    // ------------------------------------------------------------------ demo
+
+    private var demo: DemoHandle?
+    /// True while synthetic Mid-360 packets are being fed in (call from the main thread).
+    var demoRunning: Bool { demo != nil }
+
+    /// Feeds synthetic packets of a simulated room through the same path as real UDP packets.
+    func startDemo() {
+        guard demo == nil else { return }
+        let ctx = Unmanaged.passUnretained(self).toOpaque()
+        demo = demo_start({ ctx, type, buf, len in
+            guard let ctx, let buf else { return }
+            Unmanaged<LidarReceiver>.fromOpaque(ctx).takeUnretainedValue().inject(type, buf, len)
+        }, ctx)
+        state.withLock {
+            $0.lidarInfo = L("デモ（疑似 Mid-360）")
+            $0.lastUdpCnt = -1
+        }
+    }
+
+    func stopDemo() {
+        guard let d = demo else { return }
+        demo_stop(d)   // joins the thread: no callbacks after this
+        demo = nil
+        state.withLock {
+            $0.lidarInfo = L("未検出")
+            $0.lidarSrc = "-"
+            $0.lastUdpCnt = -1
+        }
+    }
+
+    /// The simulated sensor stands still for 3 s (IMU initialisation), then moves again.
+    func restartDemoMotion() {
+        if let d = demo { demo_restart_motion(d) }
+    }
+
+    private func inject(_ type: Int32, _ buf: UnsafePointer<UInt8>, _ len: Int32) {
+        let p = UnsafeRawBufferPointer(start: buf, count: Int(len))
+        if type == 1 {
+            var from = sockaddr_in()
+            from.sin_addr.s_addr = UInt32(0x7F000001).bigEndian
+            onPoint(p, from: from)
+        } else {
+            onImu(p)
+        }
     }
 
     // ------------------------------------------------------------------ Ethernet status

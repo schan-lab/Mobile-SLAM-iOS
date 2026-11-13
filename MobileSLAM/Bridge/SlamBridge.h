@@ -88,6 +88,18 @@ int32_t live_capacity(LiveHandle h);
 /// IMU packet: gyro rad/s, acc in g. Returns 1 on success.
 int32_t livox_parse_imu(const uint8_t* buf, int32_t len, float out6[6]);
 
+// ------------------------------------------------------------------ demo (synthetic Mid-360)
+
+typedef struct DemoSource* DemoHandle;
+typedef void (*DemoPacketFn)(void* ctx, int32_t type, const uint8_t* buf, int32_t len);
+
+/// Starts streaming synthetic packets (type 1 = point, 2 = IMU) to fn on a background thread, in real time.
+DemoHandle demo_start(DemoPacketFn fn, void* ctx);
+/// The simulated sensor stands still for 3 s again, then moves (call when SLAM starts).
+void demo_restart_motion(DemoHandle h);
+/// Stops the thread (no more callbacks after this returns).
+void demo_stop(DemoHandle h);
+
 #ifdef __cplusplus
 }
 #endif

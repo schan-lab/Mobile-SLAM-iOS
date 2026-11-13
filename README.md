@@ -43,7 +43,7 @@ Xcode でターゲット MobileSLAM の Signing & Capabilities で自分の Team
 iOS シミュレータは Mac のネットワークを使うので、これで受信から SLAM・描画まで一通り確認できます。
 
 ```sh
-clang++ -std=c++17 -O2 tools/mid360_sim.cpp -o /tmp/mid360_sim
+clang++ -std=c++17 -O2 -IMobileSLAM/Bridge tools/mid360_sim.cpp -o /tmp/mid360_sim
 xcrun simctl launch booted io.github.schan-lab.MobileSLAM -autoStartMapping   # Debug ビルドのみ有効
 /tmp/mid360_sim 127.0.0.1 40
 ```
@@ -63,7 +63,19 @@ core/                     SLAM 本体（LIO・NDT）
 third_party/eigen/        Eigen 3.4.0（ヘッダのみ）
 ```
 
+## デモモード
+
+設定 → 「実機なしで試す」をオンにすると、アプリ内で疑似 Mid-360（`MobileSLAM/Bridge/Mid360Synth.hpp`）の点群が流れ、
+実機なしでマップ作成・保存・自己位置推定を一通り試せます（App Review 向けでもあります）。
+
+## ローカライズ
+
+日本語（開発言語）と英語に対応しています。UI 文字列は `MobileSLAM/Localizable.xcstrings`、
+Info.plist の文言は `MobileSLAM/InfoPlist.xcstrings` にあります。コードでは `Text("日本語")` か `L("日本語")` を使い、
+数値は `String(format: L("… %@ …"), …)` で埋め込みます。
+
 ## App Store 公開について
+
 
 - データの収集・送信・トラッキングは一切なし（プライバシーマニフェストで申告済み。App Store Connect の
   「App のプライバシー」は「データの収集なし」を選択）。

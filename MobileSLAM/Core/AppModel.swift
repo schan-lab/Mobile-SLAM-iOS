@@ -31,12 +31,14 @@ final class AppModel: ObservableObject {
     @Published var showMapPicker = false
     @Published var confirmSwitchToLoc = false
     @Published var toast: String?
+    /// Synthetic Mid-360 data instead of the real sensor (for trying the app without hardware).
+    @Published private(set) var demoMode = false
 
     @Published private(set) var st = SlamStatus()
-    @Published private(set) var chipEth = Chip(ok: false, label: "Ethernet 未接続")
-    @Published private(set) var chipLidar = Chip(ok: false, label: "LiDAR 受信なし")
+    @Published private(set) var chipEth = Chip(ok: false, label: L("Ethernet 未接続"))
+    @Published private(set) var chipLidar = Chip(ok: false, label: L("LiDAR 受信なし"))
     @Published private(set) var chipImu = Chip(ok: false, label: "IMU 0Hz")
-    @Published private(set) var headline = "待機中"
+    @Published private(set) var headline = L("待機中")
     @Published private(set) var details = ""
     @Published private(set) var recordLabel: String?
 
@@ -67,6 +69,7 @@ final class AppModel: ObservableObject {
         applySettings()
         localNetwork.request()
         receiver.start()
+        if demoMode { receiver.startDemo() }
         UIApplication.shared.isIdleTimerDisabled = true
         mapView.isPaused = false
         prevT = CACurrentMediaTime()
@@ -77,7 +80,8 @@ final class AppModel: ObservableObject {
         }
         updateStatus()
         #if DEBUG
-        // test hook: `simctl launch ... -autoStartMapping` (used with tools/mid360_sim.cpp)
+        // test hooks: `simctl launch ... -demo -autoStartMapping`
+        if ProcessInfo.processInfo.arguments.contains("-demo") && !demoMode { setDemoMode(true) }
         if ProcessInfo.processInfo.arguments.contains("-autoStartMapping") && !st.isRunning && st.scans == 0 {
             toggleMapping()
         }
@@ -90,6 +94,7 @@ final class AppModel: ObservableObject {
         if receiver.recorder != nil { toggleRecord() }
         if engine.status.isRunning { engine.stop() }   // map is kept; only start() resets
         mapView.isPaused = true
+        receiver.stopDemo()
         receiver.stop()
         UIApplication.shared.isIdleTimerDisabled = false
         st = engine.status
@@ -114,6 +119,7 @@ final class AppModel: ObservableObject {
                 return
             }
             if pickMode { togglePickPose() }
+            receiver.restartDemoMotion()   // demo: stand still for the IMU initialisation
             engine.start(mode)
             mapStart = Date()
         } else {
@@ -127,7 +133,7 @@ final class AppModel: ObservableObject {
         guard m != mode else { return }
         st = engine.status
         if st.isRunning {
-            showToast("停止してから切り替えてください")
+            showToast(L("停止してから切り替えてください"))
             return
         }
         if mode == .mapping && st.vis_size > 0 {
@@ -150,7 +156,7 @@ final class AppModel: ObservableObject {
     func pickMap() {
         guard !loadingMap else { return }
         if engine.status.isRunning {
-            showToast("停止してからマップを選んでください")
+            showToast(L("停止してからマップを選んでください"))
             return
         }
         showMapPicker = true
@@ -163,10 +169,10 @@ final class AppModel: ObservableObject {
             let r: Result<Int, Error> = Result {
                 let c = try PcdCloudRef(url: item.url)
                 guard c.count > 100 else {
-                    throw NSError(domain: "PCD", code: 2, userInfo: [NSLocalizedDescriptionKey: "点が少なすぎます (\(c.count)点)"])
+                    throw NSError(domain: "PCD", code: 2, userInfo: [NSLocalizedDescriptionKey: String(format: L("点が少なすぎます (%d点)"), c.count)])
                 }
                 guard engine.setPriorMap(c) else {
-                    throw NSError(domain: "PCD", code: 3, userInfo: [NSLocalizedDescriptionKey: "NDTマップを作れませんでした"])
+                    throw NSError(domain: "PCD", code: 3, userInfo: [NSLocalizedDescriptionKey: L("NDTマップを作れませんでした")])
                 }
                 return c.count
             }
@@ -175,9 +181,9 @@ final class AppModel: ObservableObject {
                 switch r {
                 case .success(let n):
                     self.mapName = item.name
-                    self.showToast("マップ読み込み: \(n.formatted())点")
+                    self.showToast(String(format: L("マップ読み込み: %@点"), n.formatted()))
                 case .failure(let e):
-                    self.showToast("マップ読み込み失敗: \(e.localizedDescription)")
+                    self.showToast(String(format: L("マップ読み込み失敗: %@"), e.localizedDescription))
                 }
                 self.updateStatus()
             }
@@ -201,19 +207,28 @@ final class AppModel: ObservableObject {
         mapView.pickMode = false
         mapView.pitch = 70
         if let yaw {
-            showToast(String(format: "初期位置 (%.2f, %.2f)  向き %.0f°", x, y, yaw * 180 / .pi))
+            showToast(String(format: L("初期位置 (%.2f, %.2f)  向き %.0f°"), x, y, yaw * 180 / .pi))
         } else {
-            showToast(String(format: "初期位置 (%.2f, %.2f)  向きは自動で探索", x, y))
+            showToast(String(format: L("初期位置 (%.2f, %.2f)  向きは自動で探索"), x, y))
         }
+    }
+
+    func setDemoMode(_ on: Bool) {
+        guard on != demoMode else { return }
+        if engine.status.isRunning { engine.stop() }
+        demoMode = on
+        if on { receiver.startDemo() } else { receiver.stopDemo() }
+        showToast(on ? L("デモ: 疑似 Mid-360 の点群を流しています") : L("デモを終了しました"))
+        updateStatus()
     }
 
     func savePcd() {
         let url = MapStore.newMapURL()
         if engine.savePcd(to: url) {
-            showToast("保存しました: \(url.lastPathComponent)")
+            showToast(String(format: L("保存しました: %@"), url.lastPathComponent))
             log.info("saved \(url.path)")
         } else {
-            showToast("保存失敗: PCD書き出し失敗")
+            showToast(L("保存失敗: PCD書き出し失敗"))
         }
     }
 
@@ -222,14 +237,14 @@ final class AppModel: ObservableObject {
             receiver.recorder = nil
             cur.close()
             recordLabel = nil
-            showToast("生データ保存: raw/\(cur.url.lastPathComponent)")
+            showToast(String(format: L("生データ保存: %@"), "raw/" + cur.url.lastPathComponent))
         } else {
             let url = MapStore.rawDir.appendingPathComponent("raw_\(MapStore.timestamp()).livox")
             do {
                 receiver.recorder = try PacketRecorder(url: url)
                 recordLabel = "■ 0MB"
             } catch {
-                showToast("記録を開始できません: \(error.localizedDescription)")
+                showToast(String(format: L("記録を開始できません: %@"), error.localizedDescription))
             }
         }
     }
@@ -238,20 +253,20 @@ final class AppModel: ObservableObject {
 
     var phase: (String, Color) {
         let loc = st.loc_state
-        if !running && st.scans > 0 { return ("停止中", Theme.accent) }
-        if !running { return (mode == .localization ? "自己位置推定" : "ライブ", Theme.grey) }
-        if !st.isTracking { return ("初期化中", Theme.orange) }
-        if mode == .mapping { return ("マップ作成中", Theme.green) }
-        if loc == 2 { return ("追跡中", Theme.green) }
-        if loc == 3 { return ("ロスト", Theme.red) }
-        return ("探索中", Theme.orange)
+        if !running && st.scans > 0 { return (L("停止中"), Theme.accent) }
+        if !running { return (mode == .localization ? L("自己位置推定") : L("ライブ"), Theme.grey) }
+        if !st.isTracking { return (L("初期化中"), Theme.orange) }
+        if mode == .mapping { return (L("マップ作成中"), Theme.green) }
+        if loc == 2 { return (L("追跡中"), Theme.green) }
+        if loc == 3 { return (L("ロスト"), Theme.red) }
+        return (L("探索中"), Theme.orange)
     }
 
     var canSave: Bool { mode == .mapping && !running && st.vis_size > 0 }
 
     var hint: String {
-        pickMode ? "地図をタッチ: 位置   そのままドラッグ: 向き   (2本指: 移動 / ピンチ: ズーム)"
-                 : "1本指: 回転   2本指: 移動   ピンチ: ズーム   ダブルタップ: 追従"
+        pickMode ? L("地図をタッチ: 位置   そのままドラッグ: 向き   (2本指: 移動 / ピンチ: ズーム)")
+                 : L("1本指: 回転   2本指: 移動   ピンチ: ズーム   ダブルタップ: 追従")
     }
 
     func updateStatus() {
@@ -266,32 +281,35 @@ final class AppModel: ObservableObject {
         st = engine.status
         receiver.refreshInterfaces()
 
-        chipEth = Chip(ok: receiver.ethUp, label: receiver.ethUp ? "Ethernet" : "Ethernet 未接続")
-        chipLidar = Chip(ok: pps > 100, label: pps > 100 ? String(format: "Mid-360  %.0fk点/s", ptps / 1000) : "LiDAR 受信なし")
+        chipEth = Chip(ok: receiver.ethUp, label: receiver.ethUp ? "Ethernet" : L("Ethernet 未接続"))
+        let lidarName = demoMode ? L("デモ") : "Mid-360"
+        chipLidar = Chip(ok: pps > 100, label: pps > 100 ? String(format: L("%@  %.0fk点/s"), lidarName, ptps / 1000) : L("LiDAR 受信なし"))
         chipImu = Chip(ok: ips > 50, label: String(format: "IMU %.0fHz", ips))
 
         headline = {
-            if running && !st.isTracking { return "静止してください…" }
+            if running && !st.isTracking { return L("静止してください…") }
             if mode == .localization && running {
                 switch st.loc_state {
-                case 2: return String(format: "一致 %.0f%%  (%.2f, %.2f)  %.0f°", st.match * 100, st.px, st.py, st.yaw * 180 / .pi)
-                case 3: return "見失いました。再探索中…"
-                default: return "マップと照合中…"
+                case 2: return String(format: L("一致 %.0f%%  (%.2f, %.2f)  %.0f°"), st.match * 100, st.px, st.py, st.yaw * 180 / .pi)
+                case 3: return L("見失いました。再探索中…")
+                default: return L("マップと照合中…")
                 }
             }
-            if mode == .localization { return st.hasPrior ? "開始できます（初期位置の指定は任意）" : "マップを選択してください" }
+            if mode == .localization { return st.hasPrior ? L("開始できます（初期位置の指定は任意）") : L("マップを選択してください") }
             if running {
                 let sec = Int(Date().timeIntervalSince(mapStart))
-                return String(format: "%d:%02d   ", sec / 60, sec % 60) + "\(st.vis_size.formatted())点"
+                return String(format: L("%d:%02d   %@点"), sec / 60, sec % 60, st.vis_size.formatted())
             }
-            if st.scans > 0 { return "\(st.vis_size.formatted())点  PCD保存できます" }
-            return "待機中"
+            if st.scans > 0 { return String(format: L("%@点  PCD保存できます"), st.vis_size.formatted()) }
+            if demoMode { return L("デモ: 開始を押してください") }
+            if !chipLidar.ok { return L("LiDAR 待機中（設定からデモを試せます）") }
+            return L("待機中")
         }()
         if let r = receiver.recorder { recordLabel = String(format: "■ %.0fMB", Double(r.bytes) / 1e6) }
 
         var d = ""
-        if let e = receiver.socketError { d += "ソケット作成失敗: \(e)\n" }
-        d += (receiver.ethUp ? "Ethernet接続" : "Ethernet待機中…") + "\n"
+        if let e = receiver.socketError { d += String(format: L("ソケット作成失敗: %@"), e) + "\n" }
+        d += (receiver.ethUp ? L("Ethernet接続") : L("Ethernet待機中…")) + "\n"
         d += receiver.ethAddrs + "\n"
         d += "LiDAR \(c.lidarInfo)  from \(c.lidarSrc)\n"
         d += String(format: "pkt %.0f/s  pts %.0f/s  lost %lld\n", pps, ptps, c.lostPackets)

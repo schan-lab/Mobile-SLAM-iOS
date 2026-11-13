@@ -49,6 +49,13 @@ struct ContentView: View {
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active { model.activate() } else if phase == .background { model.deactivate() }
         }
+        #if DEBUG
+        .task {   // screenshot hook: `simctl launch ... -openLatestMap`
+            if ProcessInfo.processInfo.arguments.contains("-openLatestMap"), let item = MapStore.list().first {
+                path.append(Route.viewer(item))
+            }
+        }
+        #endif
         .onChange(of: path.count) { _, n in
             // back on the main screen: settings may have changed
             model.mapView.isPaused = n > 0
@@ -92,7 +99,7 @@ struct ContentView: View {
         .onTapGesture { model.showDetails.toggle() }
     }
 
-    private func smallButton(_ label: String, action: @escaping () -> Void) -> some View {
+    private func smallButton(_ label: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(label).font(.system(size: 12, weight: .bold)).foregroundStyle(.white)
                 .lineLimit(1).fixedSize()
@@ -112,32 +119,32 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
             if model.mode == .localization {
                 HStack(spacing: 8) {
-                    PillButton(label: model.loadingMap ? "読み込み中…" : (model.mapName.map { "🗺 \($0)" } ?? "マップを選択"),
+                    PillButton(label: model.loadingMap ? L("読み込み中…") : (model.mapName.map { "🗺 \($0)" } ?? L("マップを選択")),
                                height: 40, fontSize: 13) { model.pickMap() }
-                        .layoutPriority(1)
-                    PillButton(label: model.pickMode ? "指定をやめる" : "初期位置を指定",
+                    PillButton(label: model.pickMode ? L("指定をやめる") : L("初期位置を指定"),
                                color: model.pickMode ? Theme.orange : Theme.grey, height: 40, fontSize: 13) {
                         model.togglePickPose()
                     }
+                    .frame(width: 128)
                 }
             }
             HStack(spacing: 6) {
-                PillButton(label: "マップ作成", color: model.mode == .mapping ? Theme.accent : Theme.grey,
+                PillButton(label: L("マップ作成"), color: model.mode == .mapping ? Theme.accent : Theme.grey,
                            height: 38, fontSize: 13) { model.switchMode(.mapping) }
-                PillButton(label: "自己位置推定", color: model.mode == .localization ? Theme.accent : Theme.grey,
+                PillButton(label: L("自己位置推定"), color: model.mode == .localization ? Theme.accent : Theme.grey,
                            height: 38, fontSize: 13) { model.switchMode(.localization) }
             }
             .card(padding: 6)
             HStack(spacing: 8) {
-                PillButton(label: model.recordLabel ?? "● 記録", color: model.recordLabel != nil ? Theme.red : Theme.grey,
+                PillButton(label: model.recordLabel ?? L("● 記録"), color: model.recordLabel != nil ? Theme.red : Theme.grey,
                            height: 56, fontSize: 14) { model.toggleRecord() }
                     .frame(width: 96)
-                PillButton(label: model.running ? "■  停止"
-                                : (model.mode == .localization ? "▶  自己位置推定 開始" : "▶  マップ作成 開始"),
+                PillButton(label: model.running ? L("■  停止")
+                                : (model.mode == .localization ? L("▶  自己位置推定 開始") : L("▶  マップ作成 開始")),
                            color: model.running ? Theme.red : Theme.accent, height: 56, fontSize: 16) {
                     model.toggleMapping()
                 }
-                PillButton(label: "PCD保存", color: model.canSave ? Theme.green : Theme.grey, height: 56, fontSize: 14,
+                PillButton(label: L("PCD保存"), color: model.canSave ? Theme.green : Theme.grey, height: 56, fontSize: 14,
                            enabled: model.canSave) { model.savePcd() }
                     .frame(width: 96)
             }

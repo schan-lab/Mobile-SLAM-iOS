@@ -14,7 +14,7 @@ struct MapListView: View {
 
     private static let dateFmt: DateFormatter = {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "ja_JP")
+        f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "yyyy/MM/dd HH:mm"
         return f
     }()
@@ -33,19 +33,18 @@ struct MapListView: View {
                 }
             } footer: {
                 if items.isEmpty {
-                    Text("まだ保存されたマップがありません。\nマップ作成後に「PCD保存」を押してください。\n" +
-                         "PC などから受け取った PCD は「ファイルを開く」で取り込めます。")
+                    Text("まだ保存されたマップがありません。\nマップ作成後に「PCD保存」を押してください。\nPC などから受け取った PCD は「ファイルを開く」で取り込めます。")
                         .font(.system(size: 14)).foregroundStyle(Theme.textDim)
                         .frame(maxWidth: .infinity).multilineTextAlignment(.center).padding(.top, 40)
                 } else {
-                    Text(pick ? "タップで選択" : "タップで表示・左にスワイプで削除\nファイル App の「このiPhone内 › Mobile SLAM」からも取り出せます")
+                    Text(pick ? L("タップで選択") : L("タップで表示・左にスワイプで削除\nファイル App の「このiPhone内 › Mobile SLAM」からも取り出せます"))
                         .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
             }
         }
         .scrollContentBackground(.hidden)
         .background(Theme.bg)
-        .navigationTitle(pick ? "使うマップを選択" : "保存済みマップ")
+        .navigationTitle(pick ? L("使うマップを選択") : L("保存済みマップ"))
         .toolbar {
             if pick {
                 ToolbarItem(placement: .cancellationAction) { Button("閉じる") { dismiss() } }
@@ -85,8 +84,8 @@ struct MapListView: View {
                 .background(RoundedRectangle(cornerRadius: 12).fill(Theme.accent.opacity(0.13)))
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.name).font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text).lineLimit(1)
-                Text(String(format: "%@   %.1f MB   約", Self.dateFmt.string(from: item.modified), Double(item.size) / 1e6)
-                     + "\((item.size / 16).formatted())点")
+                Text(String(format: L("%@   %.1f MB   約%@点"), Self.dateFmt.string(from: item.modified),
+                            Double(item.size) / 1e6, (item.size / 16).formatted()))
                     .font(.system(size: 12)).foregroundStyle(Theme.textDim)
             }
         }

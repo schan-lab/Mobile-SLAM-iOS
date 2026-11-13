@@ -6,17 +6,23 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		A10000000000000000000001 /* MobileSLAM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileSLAM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A20000000000000000000001 /* MobileSLAM */ = {isa = PBXFileSystemSynchronizedRootGroup; path = MobileSLAM; sourceTree = "<group>"; };
-		A20000000000000000000002 /* core */ = {isa = PBXFileSystemSynchronizedRootGroup; name = core; path = core; sourceTree = "<group>"; };
+		A20000000000000000000001 /* MobileSLAM */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MobileSLAM;
+			sourceTree = "<group>";
+		};
+		A20000000000000000000002 /* core */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			name = core;
+			path = core;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +106,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				ja,
+				en,
 				Base,
 			);
 			mainGroup = A40000000000000000000001;
@@ -221,7 +228,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.schan-lab.MobileSLAM";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileSLAM/MobileSLAM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -264,7 +271,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "io.github.schan-lab.MobileSLAM";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileSLAM/MobileSLAM-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

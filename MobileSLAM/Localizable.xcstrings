@@ -1,0 +1,986 @@
+{
+  "sourceLanguage": "ja",
+  "strings": {
+    "%@   %.1f MB   約%@点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@   %.1f MB   ~%@ points"
+          }
+        }
+      }
+    },
+    "%@  %.0fk点/s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@  %.0fk pts/s"
+          }
+        }
+      }
+    },
+    "%@点  PCD保存できます": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ points · ready to save PCD"
+          }
+        }
+      }
+    },
+    "%@点%@   %.1f × %.1f × %.1f m   %@   %dms": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ points%@   %.1f × %.1f × %.1f m   %@   %d ms"
+          }
+        }
+      }
+    },
+    "%d:%02d   %@点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d:%02d   %@ points"
+          }
+        }
+      }
+    },
+    "1本指: 回転   2本指: 移動   ピンチ: ズーム   ダブルタップ: 全体表示": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 finger: rotate   2 fingers: pan   pinch: zoom   double tap: fit"
+          }
+        }
+      }
+    },
+    "1本指: 回転   2本指: 移動   ピンチ: ズーム   ダブルタップ: 追従": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 finger: rotate   2 fingers: pan   pinch: zoom   double tap: follow"
+          }
+        }
+      }
+    },
+    "Ethernet 未接続": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Ethernet"
+          }
+        }
+      }
+    },
+    "Ethernet待機中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for Ethernet…"
+          }
+        }
+      }
+    },
+    "Ethernet接続": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ethernet connected"
+          }
+        }
+      }
+    },
+    "LiDAR 受信なし": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No LiDAR data"
+          }
+        }
+      }
+    },
+    "LiDAR 待機中（設定からデモを試せます）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for LiDAR (try the demo in Settings)"
+          }
+        }
+      }
+    },
+    "LiDAR-IMU オドメトリは FAST-LIO（W. Xu, F. Zhang, RA-L 2021）の定式化に沿った独自実装です。Mid-360 との通信は公開されているプロトコルを独自に実装しており、Livox SDK は使っていません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The LiDAR-inertial odometry is an independent implementation following the FAST-LIO formulation (W. Xu, F. Zhang, RA-L 2021). Communication with the Mid-360 is an independent implementation of its published protocol and does not use the Livox SDK."
+          }
+        }
+      }
+    },
+    "Livox Mid-360 を有線 LAN でつなぎ、その場で 3D マップの作成と自己位置推定を行います。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect a Livox Mid-360 over wired Ethernet to build 3D maps and localize on the spot."
+          }
+        }
+      }
+    },
+    "Mid-360 がなくても、部屋をスキャンしながら歩く様子を再現した疑似データで、ライブ表示・マップ作成・PCD保存・自己位置推定を試せます。オンの間は実機からのデータと混ざるので、実機を使うときはオフにしてください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try live view, mapping, PCD saving and localization without a Mid-360, using simulated data of someone walking through a room. While this is on, it mixes with data from a real sensor, so turn it off when using real hardware."
+          }
+        }
+      }
+    },
+    "NDTマップを作れませんでした": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not build the NDT map"
+          }
+        }
+      }
+    },
+    "PCD保存": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save PCD"
+          }
+        }
+      }
+    },
+    "■  停止": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "■  Stop"
+          }
+        }
+      }
+    },
+    "▶  マップ作成 開始": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "▶  Start Mapping"
+          }
+        }
+      }
+    },
+    "▶  自己位置推定 開始": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "▶  Start Localization"
+          }
+        }
+      }
+    },
+    "● 記録": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "● Record"
+          }
+        }
+      }
+    },
+    "このアプリについて": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About This App"
+          }
+        }
+      }
+    },
+    "このアプリについて・ライセンス": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About & Licenses"
+          }
+        }
+      }
+    },
+    "このアプリは個人情報や利用状況を一切収集・送信しません。ローカルネットワークへのアクセスは、有線 LAN でつないだ LiDAR からデータを受信するためだけに使います。作成したマップや記録はこの iPhone 内（ファイル App の「このiPhone内 › Mobile SLAM」）にだけ保存されます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This app does not collect or send any personal or usage data. Local network access is used only to receive data from a LiDAR connected over wired Ethernet. Maps and recordings are stored only on this iPhone (Files app › On My iPhone › Mobile SLAM)."
+          }
+        }
+      }
+    },
+    "まだ保存されたマップがありません。\nマップ作成後に「PCD保存」を押してください。\nPC などから受け取った PCD は「ファイルを開く」で取り込めます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No saved maps yet.\nAfter mapping, tap “Save PCD”.\nTo import a PCD from a computer or elsewhere, use “Open File”."
+          }
+        }
+      }
+    },
+    "エラー": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
+          }
+        }
+      }
+    },
+    "キャンセル": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "ソケット作成失敗: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not open sockets: %@"
+          }
+        }
+      }
+    },
+    "タップで表示・左にスワイプで削除\nファイル App の「このiPhone内 › Mobile SLAM」からも取り出せます": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to view · swipe left to delete\nAlso available in Files › On My iPhone › Mobile SLAM"
+          }
+        }
+      }
+    },
+    "タップで選択": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to select"
+          }
+        }
+      }
+    },
+    "デモ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo"
+          }
+        }
+      }
+    },
+    "デモ: 疑似 Mid-360 の点群を流しています": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo: streaming simulated Mid-360 data"
+          }
+        }
+      }
+    },
+    "デモ: 開始を押してください": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo: tap Start"
+          }
+        }
+      }
+    },
+    "デモを終了しました": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo stopped"
+          }
+        }
+      }
+    },
+    "デモ（疑似 Mid-360）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo (simulated Mid-360)"
+          }
+        }
+      }
+    },
+    "バージョン %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@"
+          }
+        }
+      }
+    },
+    "ファイルを開く": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open File"
+          }
+        }
+      }
+    },
+    "プライバシー": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
+    "マップと照合中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matching against the map…"
+          }
+        }
+      }
+    },
+    "マップを選択": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Map"
+          }
+        }
+      }
+    },
+    "マップを選択してください": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a map"
+          }
+        }
+      }
+    },
+    "マップ作成": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapping"
+          }
+        }
+      }
+    },
+    "マップ作成・自己位置推定で、LiDAR からこの距離より近い点を使いません。持っている人の体や手が地図に写り込むのを防ぎます。狭い場所では小さくしてください。（規定 %.1f m、ライブ表示には影響しません）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapping and localization ignore points closer than this to the LiDAR, so the person carrying it does not end up in the map. Reduce it in tight spaces. (Default %.1f m; does not affect the live view.)"
+          }
+        }
+      }
+    },
+    "マップ作成中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapping"
+          }
+        }
+      }
+    },
+    "マップ読み込み: %@点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Map loaded: %@ points"
+          }
+        }
+      }
+    },
+    "マップ読み込み失敗: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not load map: %@"
+          }
+        }
+      }
+    },
+    "ライセンス: Eigen 3.4.0 (Mozilla Public License 2.0)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "License: Eigen 3.4.0 (Mozilla Public License 2.0)"
+          }
+        }
+      }
+    },
+    "ライセンス: Mobile SLAM (MIT License)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "License: Mobile SLAM (MIT License)"
+          }
+        }
+      }
+    },
+    "ライブ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        }
+      }
+    },
+    "ロスト": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lost"
+          }
+        }
+      }
+    },
+    "一致 %.0f%%  (%.2f, %.2f)  %.0f°": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match %.0f%%  (%.2f, %.2f)  %.0f°"
+          }
+        }
+      }
+    },
+    "作成中のマップは表示から消えます。必要なら先に「PCD保存」してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The current map will be cleared from the view. Save it with “Save PCD” first if you need it."
+          }
+        }
+      }
+    },
+    "使うマップを選択": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a Map"
+          }
+        }
+      }
+    },
+    "保存しました: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved: %@"
+          }
+        }
+      }
+    },
+    "保存失敗: PCD書き出し失敗": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save failed: could not write the PCD"
+          }
+        }
+      }
+    },
+    "保存済みマップ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved Maps"
+          }
+        }
+      }
+    },
+    "停止してからマップを選んでください": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop first, then choose a map"
+          }
+        }
+      }
+    },
+    "停止してから切り替えてください": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop first, then switch"
+          }
+        }
+      }
+    },
+    "停止中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopped"
+          }
+        }
+      }
+    },
+    "全体表示": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fit"
+          }
+        }
+      }
+    },
+    "共有": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share"
+          }
+        }
+      }
+    },
+    "切り替える": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch"
+          }
+        }
+      }
+    },
+    "初期位置 (%.2f, %.2f)  向き %.0f°": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Initial pose (%.2f, %.2f)  heading %.0f°"
+          }
+        }
+      }
+    },
+    "初期位置 (%.2f, %.2f)  向きは自動で探索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Initial position (%.2f, %.2f)  heading searched automatically"
+          }
+        }
+      }
+    },
+    "初期位置を指定": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set Start"
+          }
+        }
+      }
+    },
+    "初期化中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Initializing"
+          }
+        }
+      }
+    },
+    "削除": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "削除しますか？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this map?"
+          }
+        }
+      }
+    },
+    "反射強度": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intensity"
+          }
+        }
+      }
+    },
+    "反射強度：反射の弱い面は青、強い面は赤。\n高さ：点の高さで色を分けます。\n反射強度の入っていない PCD は高さで色を付けます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intensity: weakly reflecting surfaces are blue, strong ones red.\nHeight: points are coloured by height.\nPCD files without intensity are coloured by height."
+          }
+        }
+      }
+    },
+    "地図をタッチ: 位置   そのままドラッグ: 向き   (2本指: 移動 / ピンチ: ズーム)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touch the map: position   drag: heading   (2 fingers: pan / pinch: zoom)"
+          }
+        }
+      }
+    },
+    "実機なしで試す": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try Without Hardware"
+          }
+        }
+      }
+    },
+    "実装について": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Implementation"
+          }
+        }
+      }
+    },
+    "待機中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting"
+          }
+        }
+      }
+    },
+    "指定をやめる": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "探索中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching"
+          }
+        }
+      }
+    },
+    "未検出": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not detected"
+          }
+        }
+      }
+    },
+    "点が少なすぎます (%d点)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Too few points (%d)"
+          }
+        }
+      }
+    },
+    "点サイズ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point Size"
+          }
+        }
+      }
+    },
+    "点群の色": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point Colour"
+          }
+        }
+      }
+    },
+    "無効": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        }
+      }
+    },
+    "生データ保存: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raw data saved: %@"
+          }
+        }
+      }
+    },
+    "自己位置推定": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Localization"
+          }
+        }
+      }
+    },
+    "自己位置推定に切り替え": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch to Localization"
+          }
+        }
+      }
+    },
+    "表示": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display"
+          }
+        }
+      }
+    },
+    "見失いました。再探索中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lost. Searching again…"
+          }
+        }
+      }
+    },
+    "規定値に戻す": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset to Default"
+          }
+        }
+      }
+    },
+    "記録を開始できません: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not start recording: %@"
+          }
+        }
+      }
+    },
+    "設定": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "読み込み中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading…"
+          }
+        }
+      }
+    },
+    "読み込み失敗: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not load: %@"
+          }
+        }
+      }
+    },
+    "近くの点を無視する距離": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignore Points Closer Than"
+          }
+        }
+      }
+    },
+    "追跡中": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tracking"
+          }
+        }
+      }
+    },
+    "閉じる": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "開始できます（初期位置の指定は任意）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready to start (setting the start pose is optional)"
+          }
+        }
+      }
+    },
+    "静止してください…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold still…"
+          }
+        }
+      }
+    },
+    "高さ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Height"
+          }
+        }
+      }
+    },
+    "（%@点を表示）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (showing %@)"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

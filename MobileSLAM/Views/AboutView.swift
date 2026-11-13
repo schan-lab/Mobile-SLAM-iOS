@@ -10,17 +10,14 @@ struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                block("Mobile SLAM", "バージョン \(version)\n" +
-                      "Livox Mid-360 を有線 LAN でつなぎ、その場で 3D マップの作成と自己位置推定を行います。")
-                block("プライバシー",
-                      "このアプリは個人情報や利用状況を一切収集・送信しません。" +
-                      "ローカルネットワークへのアクセスは、有線 LAN でつないだ LiDAR からデータを受信するためだけに使います。" +
-                      "作成したマップや記録はこの iPhone 内（ファイル App の「このiPhone内 › Mobile SLAM」）にだけ保存されます。")
-                block("実装について",
-                      "LiDAR-IMU オドメトリは FAST-LIO（W. Xu, F. Zhang, RA-L 2021）の定式化に沿った独自実装です。" +
-                      "Mid-360 との通信は公開されているプロトコルを独自に実装しており、Livox SDK は使っていません。")
-                block("ライセンス: Mobile SLAM (MIT License)", Self.mit, mono: true)
-                block("ライセンス: Eigen 3.4.0 (Mozilla Public License 2.0)",
+                block("Mobile SLAM", String(format: L("バージョン %@"), version) + "\n" +
+                      L("Livox Mid-360 を有線 LAN でつなぎ、その場で 3D マップの作成と自己位置推定を行います。"))
+                block(L("プライバシー"),
+                      L("このアプリは個人情報や利用状況を一切収集・送信しません。ローカルネットワークへのアクセスは、有線 LAN でつないだ LiDAR からデータを受信するためだけに使います。作成したマップや記録はこの iPhone 内（ファイル App の「このiPhone内 › Mobile SLAM」）にだけ保存されます。"))
+                block(L("実装について"),
+                      L("LiDAR-IMU オドメトリは FAST-LIO（W. Xu, F. Zhang, RA-L 2021）の定式化に沿った独自実装です。Mid-360 との通信は公開されているプロトコルを独自に実装しており、Livox SDK は使っていません。"))
+                block(L("ライセンス: Mobile SLAM (MIT License)"), Self.mit, mono: true)
+                block(L("ライセンス: Eigen 3.4.0 (Mozilla Public License 2.0)"),
                       "Eigen is licensed under the MPL 2.0. A copy of the license is available at " +
                       "https://mozilla.org/MPL/2.0/ and the unmodified source code at https://gitlab.com/libeigen/eigen " +
                       "(tag 3.4.0). Built with EIGEN_MPL2_ONLY.", mono: true)
