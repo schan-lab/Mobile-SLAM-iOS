@@ -82,6 +82,9 @@ Info.plist の文言は `MobileSLAM/InfoPlist.xcstrings` にあります。コ�
 
 ## App Store 公開について
 
+掲載情報・審査メモの原稿は `AppStore/metadata.md`、スクリーンショットは `AppStore/screenshots/`、
+サポート・プライバシーポリシーのページは `AppStore/pages/` にあります。
+
 
 - データの収集・送信・トラッキングは一切なし（プライバシーマニフェストで申告済み。App Store Connect の
   「App のプライバシー」は「データの収集なし」を選択）。

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile SLAM サポート</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; max-width: 720px; margin: 0 auto; padding: 24px 20px 64px; line-height: 1.7; color: #1d1d1f; }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  h2 { font-size: 20px; margin-top: 36px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  code { background: #f2f2f4; padding: 1px 5px; border-radius: 4px; }
+  .sub { color: #6e6e73; margin-top: 0; }
+  @media (prefers-color-scheme: dark) { body { background: #0b0d12; color: #e8eaf0; } h2 { border-color: #333; } code { background: #1c1f27; } .sub { color: #8a91a0; } a { color: #6aa8ff; } }
+</style>
+</head>
+<body>
+<h1>Mobile SLAM</h1>
+<p class="sub">LiDAR を iPhone に有線でつなぎ、その場で 3D マップ作成と自己位置推定を行うアプリです。</p>
+
+<h2>はじめに</h2>
+<ol>
+  <li>iPhone に有線 LAN アダプターを挿し、設定 → Ethernet → アダプター名 → IP を構成 → 手動 で、IP アドレスを Mid-360 に設定した送信先 IP に、サブネットマスクを Mid-360 と同じサブネットのものにします（工場出荷時は <code>192.168.1.50</code> / <code>255.255.255.0</code>）。Mid-360 の IP や送信先は、アプリの 設定 → Mid-360 から変更できます。</li>
+  <li>アプリを起動し、「ローカルネットワーク」へのアクセスを許可します。</li>
+  <li>Livox Mid-360 をつないで電源を入れ、画面上部の Ethernet・Mid-360・IMU が緑になれば受信できています。</li>
+  <li>「マップ作成 開始」を押し、最初の数秒は静止してから、ゆっくり歩きます。</li>
+</ol>
+<p>実機がない場合は、設定 → 「実機なしで試す」をオンにすると、疑似データで操作を試せます。</p>
+
+<h2>よくある質問</h2>
+<p><strong>LiDAR が緑にならない</strong><br>
+IP アドレスの設定と、設定 → プライバシーとセキュリティ → ローカルネットワーク で Mobile SLAM が許可されているかを確認してください。</p>
+<p><strong>保存したマップはどこにありますか</strong><br>
+ファイル App の「このiPhone内 › Mobile SLAM」にあります。アプリ内の 3D 表示画面から共有もできます。</p>
+
+<h2>お問い合わせ</h2>
+<p>不具合やご要望は <a href="https://github.com/schan-lab/mobile-slam-support/issues">GitHub の Issues</a> へお寄せください。</p>
+
+<p><a href="privacy.html">プライバシーポリシー / Privacy Policy</a></p>
+
+<hr>
+<h1>Mobile SLAM (English)</h1>
+<p class="sub">Build 3D maps and localize on the spot with a LiDAR connected to your iPhone by wired Ethernet.</p>
+<h2>Getting started</h2>
+<ol>
+  <li>Plug a wired Ethernet adapter into your iPhone. In Settings → Ethernet → (adapter) → Configure IP → Manual, set the IP address to the Mid-360's destination (host) IP and the subnet mask to match the Mid-360's subnet (factory default: <code>192.168.1.50</code> / <code>255.255.255.0</code>). You can change the Mid-360's IP and destination in the app under Settings → Mid-360.</li>
+  <li>Open the app and allow Local Network access.</li>
+  <li>Connect and power the Livox Mid-360. When Ethernet, Mid-360 and IMU turn green at the top, data is coming in.</li>
+  <li>Tap “Start Mapping”, hold still for a few seconds, then walk slowly.</li>
+</ol>
+<p>No hardware? Turn on Settings → “Try Without Hardware” to try the app with simulated data.</p>
+<h2>Contact</h2>
+<p>Please report problems or requests on <a href="https://github.com/schan-lab/mobile-slam-support/issues">GitHub Issues</a>.</p>
+</body>
+</html>
