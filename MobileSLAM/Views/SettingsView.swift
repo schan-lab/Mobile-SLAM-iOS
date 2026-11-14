@@ -37,6 +37,20 @@ struct SettingsView: View {
                     Text("反射強度：反射の弱い面は青、強い面は赤。\n高さ：点の高さで色を分けます。\n反射強度の入っていない PCD は高さで色を付けます。")
                         .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
+                section("Mid-360") {
+                    NavigationLink {
+                        Mid360NetworkView()
+                    } label: {
+                        HStack {
+                            Text("IP アドレスと送信先").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
+                            Spacer()
+                            Image(systemName: "chevron.right").foregroundStyle(Theme.textDim)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    Text(String(format: L("Mid-360 の IP アドレスや、点群の送り先（この %@ の IP）を確認・変更します。"), Device.name))
+                        .font(.system(size: 12)).foregroundStyle(Theme.textDim)
+                }
                 section(L("デモ")) {
                     Toggle(isOn: Binding(get: { model.demoMode }, set: { model.setDemoMode($0) })) {
                         Text("実機なしで試す").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
@@ -58,6 +72,8 @@ struct SettingsView: View {
                 .buttonStyle(.plain)
             }
             .padding(12)
+            .frame(maxWidth: 700)
+            .frame(maxWidth: .infinity)
         }
         .background(Theme.bg)
         .navigationTitle("設定")

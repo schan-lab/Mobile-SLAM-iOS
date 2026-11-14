@@ -6,18 +6,45 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var path = NavigationPath()
 
-    enum Route: Hashable { case maps, settings, viewer(MapStore.Item) }
+    enum Route: Hashable { case maps, settings, mid360Network, viewer(MapStore.Item) }
 
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
                 Theme.bg.ignoresSafeArea()
                 MetalViewHost(view: model.mapView).ignoresSafeArea()
-                VStack(spacing: 0) {
-                    statusCard
-                    Spacer()
-                    if let t = model.toast { ToastView(text: t).padding(.bottom, 10) }
-                    bottomControls
+                GeometryReader { g in
+                    if g.size.width > g.size.height {
+                        // landscape: status on the left, controls on the right, the map in between
+                        let side = min(420, (g.size.width - 12) / 2)
+                        HStack(alignment: .top, spacing: 12) {
+                            VStack(spacing: 0) {
+                                // scrolls only when the details make it taller than the screen
+                                ViewThatFits(in: .vertical) {
+                                    statusCard
+                                    ScrollView(showsIndicators: false) { statusCard }
+                                }
+                                Spacer(minLength: 0)
+                            }
+                            .frame(width: side)
+                            Spacer(minLength: 0)
+                            VStack(spacing: 0) {
+                                Spacer(minLength: 0)
+                                if let t = model.toast { ToastView(text: t).padding(.bottom, 10) }
+                                bottomControls
+                            }
+                            .frame(width: side)
+                        }
+                    } else {
+                        VStack(spacing: 0) {
+                            statusCard
+                            Spacer()
+                            if let t = model.toast { ToastView(text: t).padding(.bottom, 10) }
+                            bottomControls
+                        }
+                        .frame(maxWidth: 600)
+                        .frame(maxWidth: .infinity)
+                    }
                 }
                 .padding(12)
                 .animation(.easeInOut(duration: 0.2), value: model.toast)
@@ -27,6 +54,7 @@ struct ContentView: View {
                 switch r {
                 case .maps: MapListView(pick: false) { item in path.append(Route.viewer(item)) }
                 case .settings: SettingsView()
+                case .mid360Network: Mid360NetworkView()
                 case .viewer(let item): PcdViewerView(item: item)
                 }
             }
@@ -50,9 +78,17 @@ struct ContentView: View {
             if phase == .active { model.activate() } else if phase == .background { model.deactivate() }
         }
         #if DEBUG
-        .task {   // screenshot hook: `simctl launch ... -openLatestMap`
+        .task {   // screenshot hooks: `simctl launch ... -openLatestMap` / `-landscape`
+            if ProcessInfo.processInfo.arguments.contains("-landscape"),
+               let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+            }
             if ProcessInfo.processInfo.arguments.contains("-openLatestMap"), let item = MapStore.list().first {
                 path.append(Route.viewer(item))
+            }
+            if ProcessInfo.processInfo.arguments.contains("-openMid360Network") {
+                path.append(Route.settings)
+                path.append(Route.mid360Network)
             }
         }
         #endif
@@ -74,18 +110,17 @@ struct ContentView: View {
                     StatusChip(ok: model.chipImu.ok, label: model.chipImu.label)
                 }
             }
-            HStack(spacing: 8) {
-                let (label, color) = model.phase
-                Text(label)
-                    .font(.system(size: 12, weight: .bold)).foregroundStyle(.white)
-                    .padding(.horizontal, 10).padding(.vertical, 3)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(color))
-                Text(model.headline)
-                    .font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
-                    .lineLimit(1).minimumScaleFactor(0.7)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                smallButton("保存済みマップ") { path.append(Route.maps) }
-                smallButton("設定") { path.append(Route.settings) }
+            // one row when there is room, otherwise the buttons go to a second row
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    phaseAndHeadline.fixedSize()
+                    Spacer(minLength: 0)
+                    navButtons
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    phaseAndHeadline
+                    navButtons
+                }
             }
             if model.showDetails {
                 Text(model.details)
@@ -97,6 +132,27 @@ struct ContentView: View {
         .card()
         .contentShape(Rectangle())
         .onTapGesture { model.showDetails.toggle() }
+    }
+
+    private var phaseAndHeadline: some View {
+        HStack(spacing: 8) {
+            let (label, color) = model.phase
+            Text(label)
+                .font(.system(size: 12, weight: .bold)).foregroundStyle(.white)
+                .lineLimit(1).fixedSize()
+                .padding(.horizontal, 10).padding(.vertical, 3)
+                .background(RoundedRectangle(cornerRadius: 10).fill(color))
+            Text(model.headline)
+                .font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
+                .lineLimit(1).minimumScaleFactor(0.7)
+        }
+    }
+
+    private var navButtons: some View {
+        HStack(spacing: 8) {
+            smallButton("保存済みマップ") { path.append(Route.maps) }
+            smallButton("設定") { path.append(Route.settings) }
+        }
     }
 
     private func smallButton(_ label: LocalizedStringKey, action: @escaping () -> Void) -> some View {

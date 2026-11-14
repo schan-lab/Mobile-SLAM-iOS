@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "ja",
   "strings": {
+    "%1$@ の 設定 → Ethernet → IP を構成 → 手動 で、IP アドレスを %2$@、サブネットマスクを %3$@ にしてください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the %1$@'s Settings → Ethernet → Configure IP → Manual, set the IP address to %2$@ and the subnet mask to %3$@."
+          }
+        }
+      }
+    },
     "%@   %.1f MB   約%@点": {
       "localizations": {
         "en": {
@@ -17,6 +27,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@  %.0fk pts/s"
+          }
+        }
+      }
+    },
+    "%@ の有線 LAN": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ wired LAN"
           }
         }
       }
@@ -101,6 +121,26 @@
         }
       }
     },
+    "IP アドレスと送信先": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IP Address and Destination"
+          }
+        }
+      }
+    },
+    "IP アドレスの形式が正しくありません: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid IP address: %@"
+          }
+        }
+      }
+    },
     "LiDAR 受信なし": {
       "localizations": {
         "en": {
@@ -141,12 +181,122 @@
         }
       }
     },
+    "Mid-360 からの応答を解釈できませんでした。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not understand the response from the Mid-360."
+          }
+        }
+      }
+    },
+    "Mid-360 から応答がありません。Mid-360 の IP が正しいか、%@ の IP が Mid-360 と同じサブネットにあるかを確認してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No response from the Mid-360. Check that its IP address is correct and that the %@'s IP is on the same subnet as the Mid-360."
+          }
+        }
+      }
+    },
     "Mid-360 がなくても、部屋をスキャンしながら歩く様子を再現した疑似データで、ライブ表示・マップ作成・PCD保存・自己位置推定を試せます。オンの間は実機からのデータと混ざるので、実機を使うときはオフにしてください。": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Try live view, mapping, PCD saving and localization without a Mid-360, using simulated data of someone walking through a room. While this is on, it mixes with data from a real sensor, so turn it off when using real hardware."
+          }
+        }
+      }
+    },
+    "Mid-360 が設定を受け付けませんでした（ret_code 0x%02X, key 0x%04X）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Mid-360 rejected the settings (ret_code 0x%02X, key 0x%04X)"
+          }
+        }
+      }
+    },
+    "Mid-360 と送信先に同じ IP は使えません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Mid-360 and the destination cannot use the same IP."
+          }
+        }
+      }
+    },
+    "Mid-360 に書き込む": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write to Mid-360"
+          }
+        }
+      }
+    },
+    "Mid-360 の IP を変えると、書き込み後に Mid-360 が再起動します（十数秒）。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changing the Mid-360's IP restarts the Mid-360 after writing (takes 10–20 seconds)."
+          }
+        }
+      }
+    },
+    "Mid-360 の IP アドレス": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mid-360 IP address"
+          }
+        }
+      }
+    },
+    "Mid-360 の IP アドレスや、点群の送り先（この %@ の IP）を確認・変更します。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View or change the Mid-360's IP address and where it sends its data (this %@'s IP)."
+          }
+        }
+      }
+    },
+    "Mid-360 のネットワーク": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mid-360 Network"
+          }
+        }
+      }
+    },
+    "Mid-360 の設定を変更しますか？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change the Mid-360 settings?"
+          }
+        }
+      }
+    },
+    "Mid-360: %@ → %@\n送信先: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mid-360: %@ → %@\nDestination: %@"
           }
         }
       }
@@ -211,6 +361,16 @@
         }
       }
     },
+    "いまの Mid-360 の IP です。点群を受信中なら自動で入ります。%@ の IP がこのアドレスと同じサブネットにないと設定できません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Mid-360's current IP. Filled in automatically while point data is coming in. The %@'s IP must be on the same subnet as this address to change settings."
+          }
+        }
+      }
+    },
     "このアプリについて": {
       "localizations": {
         "en": {
@@ -231,12 +391,12 @@
         }
       }
     },
-    "このアプリは個人情報や利用状況を一切収集・送信しません。ローカルネットワークへのアクセスは、有線 LAN でつないだ LiDAR からデータを受信するためだけに使います。作成したマップや記録はこの iPhone 内（ファイル App の「このiPhone内 › Mobile SLAM」）にだけ保存されます。": {
+    "このアプリは個人情報や利用状況を一切収集・送信しません。ローカルネットワークへのアクセスは、有線 LAN でつないだ LiDAR からデータを受信するためだけに使います。作成したマップや記録はこの %1$@ 内（ファイル App の「この%1$@内 › Mobile SLAM」）にだけ保存されます。": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This app does not collect or send any personal or usage data. Local network access is used only to receive data from a LiDAR connected over wired Ethernet. Maps and recordings are stored only on this iPhone (Files app › On My iPhone › Mobile SLAM)."
+            "value": "This app does not collect or send any personal or usage data. Local network access is used only to receive data from a LiDAR connected over wired Ethernet. Maps and recordings are stored only on this %1$@ (Files app › On My %1$@ › Mobile SLAM)."
           }
         }
       }
@@ -271,6 +431,26 @@
         }
       }
     },
+    "ゲートウェイ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gateway"
+          }
+        }
+      }
+    },
+    "サブネットマスク": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Subnet mask"
+          }
+        }
+      }
+    },
     "ソケット作成失敗: %@": {
       "localizations": {
         "en": {
@@ -281,12 +461,12 @@
         }
       }
     },
-    "タップで表示・左にスワイプで削除\nファイル App の「このiPhone内 › Mobile SLAM」からも取り出せます": {
+    "タップで表示・左にスワイプで削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap to view · swipe left to delete\nAlso available in Files › On My iPhone › Mobile SLAM"
+            "value": "Tap to view · swipe left to delete\nAlso available in Files › On My %@ › Mobile SLAM"
           }
         }
       }
@@ -337,6 +517,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Demo stopped"
+          }
+        }
+      }
+    },
+    "デモモードがオンです。実機の設定を変えるには、設定画面でデモをオフにしてください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demo mode is on. To change the settings of a real sensor, turn the demo off in Settings."
           }
         }
       }
@@ -761,12 +951,82 @@
         }
       }
     },
+    "接続状況": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection"
+          }
+        }
+      }
+    },
+    "新しい設定": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Settings"
+          }
+        }
+      }
+    },
+    "書き込みました。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings written."
+          }
+        }
+      }
+    },
+    "書き込みました。Mid-360 を再起動しています。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings written. The Mid-360 is restarting."
+          }
+        }
+      }
+    },
+    "書き込む": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write"
+          }
+        }
+      }
+    },
+    "未接続": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not connected"
+          }
+        }
+      }
+    },
     "未検出": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Not detected"
+          }
+        }
+      }
+    },
+    "検出した Mid-360": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detected Mid-360"
           }
         }
       }
@@ -807,6 +1067,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Off"
+          }
+        }
+      }
+    },
+    "現在の Mid-360": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current Mid-360"
+          }
+        }
+      }
+    },
+    "現在の設定を読み込む": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Load Current Settings"
           }
         }
       }
@@ -891,6 +1171,26 @@
         }
       }
     },
+    "設定は Mid-360 本体に保存され、電源を切っても残ります。わからなくなった場合は、Livox Viewer 2 などで工場出荷時の設定（Mid-360: 192.168.1.1XX、送信先: 192.168.1.50）に戻せます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings are stored in the Mid-360 and kept when it is powered off. If you lose track of them, you can restore the factory settings (Mid-360: 192.168.1.1XX, destination: 192.168.1.50) with Livox Viewer 2 or similar tools."
+          }
+        }
+      }
+    },
+    "読み込みました。現在の送信先は %@ です。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loaded. The current destination is %@."
+          }
+        }
+      }
+    },
     "読み込み中…": {
       "localizations": {
         "en": {
@@ -927,6 +1227,56 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tracking"
+          }
+        }
+      }
+    },
+    "送信先 IP が Mid-360 の IP と同じサブネットにありません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination IP is not on the same subnet as the Mid-360's IP."
+          }
+        }
+      }
+    },
+    "送信先 IP アドレス（この %@）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destination IP address (this %@)"
+          }
+        }
+      }
+    },
+    "送信先だけを変える場合、再起動なしですぐに反映されます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changing only the destination takes effect immediately, without a restart."
+          }
+        }
+      }
+    },
+    "通信エラー: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Network error: %@"
+          }
+        }
+      }
+    },
+    "通信中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Communicating…"
           }
         }
       }

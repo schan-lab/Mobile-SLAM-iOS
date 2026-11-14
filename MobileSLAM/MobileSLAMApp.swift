@@ -4,6 +4,8 @@ import SwiftUI
 struct MobileSLAMApp: App {
     @StateObject private var model = AppModel()
 
+    init() { Device.setUp() }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -5,7 +5,8 @@ import os
 private let log = Logger(subsystem: "MobileSLAM", category: "Mid360")
 
 /// Receives Livox Mid-360 point cloud / IMU over UDP (BSD sockets, one thread per port).
-/// The iPhone's wired Ethernet (USB-C / Lightning adapter) must have the Mid-360 destination IP (192.168.1.50).
+/// The iPhone's wired Ethernet (USB-C / Lightning adapter) must have the host IP configured in the Mid-360
+/// (factory default 192.168.1.50). Sockets bind to INADDR_ANY, so any address / subnet works.
 final class LidarReceiver: @unchecked Sendable {
 
     struct Counters {
@@ -18,6 +19,8 @@ final class LidarReceiver: @unchecked Sendable {
         var dataType: Int = -1
         var lidarSrc: String = "-"
         var lidarInfo: String = L("未検出")
+        /// LiDAR IP from the discovery ACK (empty until one arrives).
+        var detectedIP: String = ""
         var lastImu: [Float]? = nil
     }
 
@@ -43,6 +46,10 @@ final class LidarReceiver: @unchecked Sendable {
     // ---- Ethernet status ----
     private(set) var ethAddrs: String = "-"
     private(set) var ethUp = false
+    /// IPv4 address / netmask of each wired interface.
+    private(set) var ethIPv4: [(ip: String, mask: String)] = []
+    /// Directed broadcast addresses of the wired interfaces (for LiDAR discovery). Read by the detect thread.
+    private let ethBroadcasts = OSAllocatedUnfairLock<[String]>(initialState: [])
     private(set) var socketError: String? = nil
     private let monitor = NWPathMonitor()
     private var wiredNames: Set<String> = []
@@ -167,6 +174,8 @@ final class LidarReceiver: @unchecked Sendable {
     func refreshInterfaces() {
         let wired = monitorQueue.sync { wiredNames }
         var list: [(String, String)] = []
+        var bcasts: [String] = []
+        var v4: [(ip: String, mask: String)] = []
         var ifap: UnsafeMutablePointer<ifaddrs>?
         if getifaddrs(&ifap) == 0, let first = ifap {
             var p: UnsafeMutablePointer<ifaddrs>? = first
@@ -176,19 +185,25 @@ final class LidarReceiver: @unchecked Sendable {
                 let name = String(cString: ifa.pointee.ifa_name)
                 let addr = sa.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee.sin_addr }
                 let ip = String(cString: inet_ntoa(addr))
-                var prefix = 0
+                var mask: in_addr_t = 0
                 if let nm = ifa.pointee.ifa_netmask {
-                    let m = nm.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee.sin_addr.s_addr }
-                    prefix = m.nonzeroBitCount
+                    mask = nm.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee.sin_addr.s_addr }
                 }
-                // wired adapters reported by Network.framework, or any secondary en* on the Mid-360 subnet
-                if wired.contains(name) || (name.hasPrefix("en") && name != "en0" && ip.hasPrefix("192.168.1.")) {
-                    list.append((name, "\(ip)/\(prefix)"))
+                // wired adapters reported by Network.framework, or any secondary en* (en0 is Wi-Fi)
+                if wired.contains(name) || (name.hasPrefix("en") && name != "en0") {
+                    list.append((name, "\(ip)/\(mask.nonzeroBitCount)"))
+                    v4.append((ip, String(cString: inet_ntoa(in_addr(s_addr: mask)))))
+                    if mask != 0 && mask != 0xFFFF_FFFF {
+                        let b = in_addr(s_addr: addr.s_addr | ~mask)
+                        bcasts.append(String(cString: inet_ntoa(b)))
+                    }
                 }
             }
             freeifaddrs(first)
         }
         ethUp = !list.isEmpty
+        ethIPv4 = v4
+        ethBroadcasts.withLock { [bcasts] in $0 = bcasts }
         ethAddrs = list.isEmpty ? "-" : list.map { "\($0.0): \($0.1)" }.joined(separator: ", ")
     }
 
@@ -273,7 +288,7 @@ final class LidarReceiver: @unchecked Sendable {
         while alive(gen) {
             let req = Livox.buildDetectRequest(seq: seq)
             seq &+= 1
-            var targets = ["255.255.255.255", "192.168.1.255"]
+            var targets = ["255.255.255.255"] + ethBroadcasts.withLock { $0 }
             let src = counters.lidarSrc
             if src != "-" { targets.append(src) }
             for t in targets { _ = send(fd, req, to: t, port: Livox.lidarDetectPort) }
@@ -293,7 +308,10 @@ final class LidarReceiver: @unchecked Sendable {
     private func onDetect(_ p: UnsafeRawBufferPointer) {
         guard let ack = Livox.parseDetectAck(p) else { return }
         let info = "\(Livox.devTypeName(ack.devType)) SN=\(ack.sn) IP=\(ack.ip)"
-        state.withLock { $0.lidarInfo = info }
+        state.withLock {
+            $0.lidarInfo = info
+            $0.detectedIP = ack.ip
+        }
     }
 
     private func onPoint(_ p: UnsafeRawBufferPointer, from: sockaddr_in) {

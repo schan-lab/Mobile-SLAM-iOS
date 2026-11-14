@@ -38,6 +38,7 @@ struct PcdViewerView: View {
                 }
                 .card(padding: 8)
             }
+            .frame(maxWidth: 600)
             .padding(12)
         }
         .navigationBarTitleDisplayMode(.inline)

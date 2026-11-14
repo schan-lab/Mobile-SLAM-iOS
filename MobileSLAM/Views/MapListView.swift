@@ -37,7 +37,7 @@ struct MapListView: View {
                         .font(.system(size: 14)).foregroundStyle(Theme.textDim)
                         .frame(maxWidth: .infinity).multilineTextAlignment(.center).padding(.top, 40)
                 } else {
-                    Text(pick ? L("タップで選択") : L("タップで表示・左にスワイプで削除\nファイル App の「このiPhone内 › Mobile SLAM」からも取り出せます"))
+                    Text(pick ? L("タップで選択") : String(format: L("タップで表示・左にスワイプで削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます"), Device.name))
                         .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
             }
