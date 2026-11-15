@@ -110,9 +110,11 @@ public:
         R = out_R_;
         p = out_p_;
     }
-    std::vector<Eigen::Vector3f> trajectory() const {
+    /// The most recent max_pts trajectory points (oldest first).
+    std::vector<Eigen::Vector3f> trajectory(size_t max_pts) const {
         std::lock_guard<std::mutex> l(out_mtx_);
-        return out_traj_;
+        const size_t start = out_traj_.size() > max_pts ? out_traj_.size() - max_pts : 0;
+        return std::vector<Eigen::Vector3f>(out_traj_.begin() + start, out_traj_.end());
     }
     std::vector<Eigen::Vector3f> lastScan() const {
         std::lock_guard<std::mutex> l(out_mtx_);

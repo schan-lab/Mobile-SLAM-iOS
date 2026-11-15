@@ -131,6 +131,8 @@ void Lio::addImu(double t, const Vec3& gyr, const Vec3& acc) {
     if (!imu_.empty() && t <= imu_.back().t) return;
     if (t <= t_state_) return;
     imu_.push_back({t, gyr, acc});
+    // Point packets stopped but IMU keeps coming: keep the last 10 s only (200 Hz).
+    while (imu_.size() > 2000) imu_.pop_front();
 }
 
 void Lio::tryInit() {

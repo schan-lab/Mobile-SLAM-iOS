@@ -36,12 +36,12 @@ final class PcdMTKView: OrbitMTKView, MTKViewDelegate {
     required init(coder: NSCoder) { fatalError("not used") }
 
     func setCloud(_ c: PcdCloudRef) {
-        cloud = c
         // wrap the page-aligned native allocation without copying
         let p = c.ptr.pointee
         cloudBuf = pipe?.device.makeBuffer(bytesNoCopy: p.xyzi, length: Int(p.alloc_bytes),
                                            options: .storageModeShared, deallocator: nil)
             ?? pipe?.device.makeBuffer(bytes: p.xyzi, length: max(c.count, 1) * 16, options: .storageModeShared)
+        cloud = c   // after cloudBuf: the old buffer must not outlive the old cloud
         fit()
     }
 
@@ -67,6 +67,9 @@ final class PcdMTKView: OrbitMTKView, MTKViewDelegate {
               let cmd = pipe.queue.makeCommandBuffer(), let enc = cmd.makeRenderCommandEncoder(descriptor: rpd) else { return }
         enc.setDepthStencilState(pipe.depthOn)
         if let c = cloud, let buf = cloudBuf {
+            // cloudBuf wraps c's memory without copying: keep both alive until the GPU is done,
+            // even if setCloud() replaces them meanwhile
+            cmd.addCompletedHandler { _ in withExtendedLifetime((c, buf)) {} }
             let m = mvp()
             let mode = c.hasIntensity ? colorMode : AppSettings.colorHeight
             pipe.draw(enc, buf, prim: .point, count: c.count,

@@ -201,9 +201,7 @@ void slam_get_status(SlamHandle h, SlamStatus* o) {
 int32_t slam_map(SlamHandle h, float* out, int32_t max_pts) { return E(h)->lio.mapSnapshot(out, max_pts); }
 
 int32_t slam_trajectory(SlamHandle h, float* out, int32_t max_pts) {
-    auto tr = E(h)->lio.trajectory();
-    size_t start = tr.size() > size_t(max_pts) ? tr.size() - max_pts : 0;
-    return copyXyz(tr, start, out, max_pts);
+    return copyXyz(E(h)->lio.trajectory(size_t(std::max(max_pts, 0))), 0, out, max_pts);
 }
 
 int32_t slam_scan(SlamHandle h, float* out, int32_t max_pts) { return copyXyz(E(h)->lio.lastScan(), 0, out, max_pts); }
