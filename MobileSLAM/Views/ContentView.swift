@@ -150,7 +150,7 @@ struct ContentView: View {
 
     private var navButtons: some View {
         HStack(spacing: 8) {
-            smallButton("保存済みマップ") { path.append(Route.maps) }
+            smallButton("PCD ビューア") { path.append(Route.maps) }
             smallButton("設定") { path.append(Route.settings) }
         }
     }

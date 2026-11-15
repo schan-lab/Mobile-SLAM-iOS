@@ -311,6 +311,16 @@
         }
       }
     },
+    "PCD ビューア": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PCD Viewer"
+          }
+        }
+      }
+    },
     "PCD保存": {
       "localizations": {
         "en": {
@@ -461,12 +471,12 @@
         }
       }
     },
-    "タップで表示・左にスワイプで削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます": {
+    "タップで表示・左にスワイプか長押しで共有・削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap to view · swipe left to delete\nAlso available in Files › On My %@ › Mobile SLAM"
+            "value": "Tap to view · swipe left or long-press to share or delete\nAlso available in Files › On My %@ › Mobile SLAM"
           }
         }
       }
@@ -737,16 +747,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Save failed: could not write the PCD"
-          }
-        }
-      }
-    },
-    "保存済みマップ": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saved Maps"
           }
         }
       }

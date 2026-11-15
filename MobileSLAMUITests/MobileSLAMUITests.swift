@@ -25,7 +25,7 @@ final class MobileSLAMUITests: XCTestCase {
 
         let window = app.windows.firstMatch.frame
         XCTAssertGreaterThan(window.width, window.height, "not landscape")
-        let settings = app.buttons["設定"], stop = app.buttons["■  停止"], maps = app.buttons["保存済みマップ"]
+        let settings = app.buttons["設定"], stop = app.buttons["■  停止"], maps = app.buttons["PCD ビューア"]
         XCTAssertTrue(stop.waitForExistence(timeout: 5), "mapping did not start")
         for e in [settings, stop, maps, app.buttons["マップ作成"], app.buttons["自己位置推定"]] {
             XCTAssertTrue(e.isHittable, "\(e) not hittable")
@@ -44,6 +44,50 @@ final class MobileSLAMUITests: XCTestCase {
         link.tap()
         XCTAssertTrue(app.buttons["Mid-360 に書き込む"].waitForExistence(timeout: 5))
         save("landscape-network")
+    }
+
+    /// Maps the demo room, saves it, then opens it from the PCD viewer list and shares it from there.
+    func testPcdViewerShare() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-demo", "-autoStartMapping"]
+        app.launch()
+        let stop = app.buttons["■  停止"]
+        XCTAssertTrue(stop.waitForExistence(timeout: 10), "mapping did not start")
+        sleep(8)
+        stop.tap()
+        app.buttons["PCD保存"].tap()
+
+        app.buttons["PCD ビューア"].tap()
+        XCTAssertTrue(app.navigationBars["PCD ビューア"].waitForExistence(timeout: 5))
+        let first = app.cells.firstMatch
+        XCTAssertTrue(first.waitForExistence(timeout: 5), "saved map not listed")
+        save("viewer-list")
+
+        // long press: share / delete menu
+        first.press(forDuration: 1.0)
+        let share = app.buttons["共有"]
+        XCTAssertTrue(share.waitForExistence(timeout: 5), "no share in the context menu")
+        XCTAssertTrue(app.buttons["削除"].exists)
+        save("viewer-list-menu")
+        share.tap()
+        XCTAssertTrue(app.otherElements["ActivityListView"].waitForExistence(timeout: 10), "share sheet did not open")
+        save("viewer-list-share")
+        // the share sheet cannot be dismissed reliably from UI tests: start over in the list
+        app.terminate()
+        app.launchArguments = []
+        app.launch()
+        app.buttons["PCD ビューア"].tap()
+        XCTAssertTrue(first.waitForExistence(timeout: 5))
+
+        // swipe left: share next to delete
+        first.swipeLeft()
+        XCTAssertTrue(app.buttons["共有"].waitForExistence(timeout: 5), "no share in the swipe actions")
+        save("viewer-list-swipe")
+
+        // tap: the 3D viewer
+        first.swipeRight()
+        first.tap()
+        XCTAssertTrue(app.buttons["全体表示"].waitForExistence(timeout: 10), "viewer did not open")
     }
 
     /// Reads the settings of the fake Mid-360, then changes its IP and destination (and reboots it).

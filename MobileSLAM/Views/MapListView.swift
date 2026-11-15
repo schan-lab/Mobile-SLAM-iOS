@@ -28,6 +28,16 @@ struct MapListView: View {
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             if !pick {
                                 Button("削除", role: .destructive) { deleting = item }
+                                ShareLink(item: item.url) { Label("共有", systemImage: "square.and.arrow.up") }
+                                    .tint(Theme.accent)
+                            }
+                        }
+                        .contextMenu {
+                            if !pick {
+                                ShareLink(item: item.url) { Label("共有", systemImage: "square.and.arrow.up") }
+                                Button(role: .destructive) { deleting = item } label: {
+                                    Label("削除", systemImage: "trash")
+                                }
                             }
                         }
                 }
@@ -37,14 +47,14 @@ struct MapListView: View {
                         .font(.system(size: 14)).foregroundStyle(Theme.textDim)
                         .frame(maxWidth: .infinity).multilineTextAlignment(.center).padding(.top, 40)
                 } else {
-                    Text(pick ? L("タップで選択") : String(format: L("タップで表示・左にスワイプで削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます"), Device.name))
+                    Text(pick ? L("タップで選択") : String(format: L("タップで表示・左にスワイプか長押しで共有・削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます"), Device.name))
                         .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
             }
         }
         .scrollContentBackground(.hidden)
         .background(Theme.bg)
-        .navigationTitle(pick ? L("使うマップを選択") : L("保存済みマップ"))
+        .navigationTitle(pick ? L("使うマップを選択") : L("PCD ビューア"))
         .toolbar {
             if pick {
                 ToolbarItem(placement: .cancellationAction) { Button("閉じる") { dismiss() } }

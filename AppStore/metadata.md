@@ -60,7 +60,7 @@ This app connects to a Livox Mid-360 LiDAR sensor over a wired Ethernet adapter 
    - Open 設定 (Settings, top right) → turn on "実機なしで試す" (Try without hardware).
    - Go back. Synthetic sensor data of a room starts streaming; the status chips turn green.
    - Tap "▶ マップ作成 開始" (Start mapping). Keep the phone still for 3 seconds while it initializes; the map then builds automatically.
-   - Tap "■ 停止" (Stop) → "PCD保存" (Save PCD). The map appears under "保存済みマップ" (Saved maps) and can be viewed in 3D.
+   - Tap "■ 停止" (Stop) → "PCD保存" (Save PCD). The map appears under "PCD ビューア" (PCD Viewer) and can be viewed in 3D.
    - Localization: switch to "自己位置推定", choose the saved map, then tap "▶ 自己位置推定 開始".
 
 2. Video on real hardware
