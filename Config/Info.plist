@@ -12,7 +12,5 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<true/>
 </dict>
 </plist>
