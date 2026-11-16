@@ -74,6 +74,10 @@ public:
     /// Points closer than this (m, LiDAR frame) are ignored. Takes effect from the next scan.
     void setBlind(double m) { cfg_.blind = m < 0 ? 0 : m; }
     double blind() const { return cfg_.blind; }
+    /// Replaces the tuning parameters. Map resolutions apply from the next reset(); the NDT grid of the prior
+    /// map is rebuilt when ndt_res changes.
+    void setConfig(const LioConfig& c);
+    const LioConfig& config() const { return cfg_; }
     /// Sets the prior map for localisation (world frame). Builds the NDT grid.
     /// intensity (optional, same length as pts) is only used for display.
     void setPriorMap(const std::vector<Eigen::Vector3f>& pts, const std::vector<float>& intensity = {});

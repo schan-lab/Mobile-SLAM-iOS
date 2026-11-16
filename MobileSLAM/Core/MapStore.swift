@@ -32,10 +32,15 @@ enum MapStore {
     static func newMapURL() -> URL { documents.appendingPathComponent("map_\(timestamp()).pcd") }
 
     /// PCD files in Documents, newest first.
-    static func list() -> [Item] {
+    static func list() -> [Item] { files(in: [documents], ext: "pcd") }
+
+    /// ROS 2 bags (MCAP): recordings in raw/ and files imported into Documents, newest first.
+    static func listBags() -> [Item] { files(in: [rawDir, documents], ext: "mcap") }
+
+    private static func files(in dirs: [URL], ext: String) -> [Item] {
         let keys: [URLResourceKey] = [.fileSizeKey, .contentModificationDateKey]
-        let urls = (try? FileManager.default.contentsOfDirectory(at: documents, includingPropertiesForKeys: keys)) ?? []
-        return urls.filter { $0.pathExtension.lowercased() == "pcd" }.map { u in
+        let urls = dirs.flatMap { (try? FileManager.default.contentsOfDirectory(at: $0, includingPropertiesForKeys: keys)) ?? [] }
+        return urls.filter { $0.pathExtension.lowercased() == ext }.map { u in
             let v = try? u.resourceValues(forKeys: Set(keys))
             return Item(url: u, size: Int64(v?.fileSize ?? 0), modified: v?.contentModificationDate ?? .distantPast)
         }.sorted { $0.modified > $1.modified }

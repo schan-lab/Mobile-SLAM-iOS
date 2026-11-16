@@ -11,6 +11,7 @@ struct MapListView: View {
     @State private var importing = false
     @State private var deleting: MapStore.Item?
     @State private var error: String?
+    @State private var sending: MapStore.Item?
 
     private static let dateFmt: DateFormatter = {
         let f = DateFormatter()
@@ -30,11 +31,14 @@ struct MapListView: View {
                                 Button("削除", role: .destructive) { deleting = item }
                                 ShareLink(item: item.url) { Label("共有", systemImage: "square.and.arrow.up") }
                                     .tint(Theme.accent)
+                                Button { sending = item } label: { Label("SFTP", systemImage: "arrow.up.to.line") }
+                                    .tint(Theme.green)
                             }
                         }
                         .contextMenu {
                             if !pick {
                                 ShareLink(item: item.url) { Label("共有", systemImage: "square.and.arrow.up") }
+                                Button { sending = item } label: { Label("SFTP で送信", systemImage: "arrow.up.to.line") }
                                 Button(role: .destructive) { deleting = item } label: {
                                     Label("削除", systemImage: "trash")
                                 }
@@ -47,7 +51,7 @@ struct MapListView: View {
                         .font(.system(size: 14)).foregroundStyle(Theme.textDim)
                         .frame(maxWidth: .infinity).multilineTextAlignment(.center).padding(.top, 40)
                 } else {
-                    Text(pick ? L("タップで選択") : String(format: L("タップで表示・左にスワイプか長押しで共有・削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます"), Device.name))
+                    Text(pick ? L("タップで選択") : String(format: L("タップで表示・左にスワイプか長押しで共有・SFTP 送信・削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます"), Device.name))
                         .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
             }
@@ -82,6 +86,10 @@ struct MapListView: View {
         .alert("エラー", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
             Button("OK", role: .cancel) {}
         } message: { Text(error ?? "") }
+        .sheet(item: $sending) { item in
+            NavigationStack { SftpSendView(item: item) }
+                .preferredColorScheme(.dark)
+        }
         .onAppear(perform: refresh)
     }
 

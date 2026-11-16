@@ -156,10 +156,45 @@ void slam_set_initial_pose(SlamHandle h, float x, float y, float z, float yaw, i
     LOGI("initial pose %.2f %.2f %.2f yaw %.1f deg (search %d)", x, y, z, yaw * 57.2958, !has_yaw);
 }
 
-void slam_set_blind(SlamHandle h, float m) {
+void slam_default_params(SlamParams* o) {
+    const mndt::LioConfig c;
+    o->blind = float(c.blind);
+    o->max_range = float(c.max_range);
+    o->scan_ds = float(c.scan_ds);
+    o->map_res = float(c.map_res);
+    o->vis_res = float(c.vis_res);
+    o->max_iter = c.max_iter;
+    o->plane_thresh = float(c.plane_thresh);
+    o->knn_max_d2 = float(c.knn_max_d2);
+    o->gyr_cov = float(c.gyr_cov);
+    o->acc_cov = float(c.acc_cov);
+    o->laser_cov = float(c.laser_cov);
+    for (int i = 0; i < 3; ++i) o->ext_t[i] = float(c.t_LI[i]);
+    o->ndt_res = float(c.ndt_res);
+    o->loc_match_ok = float(c.loc_match_ok);
+    o->loc_init_radius = float(c.loc_init_radius);
+}
+
+void slam_set_params(SlamHandle h, const SlamParams* p) {
     Engine* e = E(h);
     std::lock_guard<std::mutex> ll(e->lio_mtx_);
-    e->lio.setBlind(m);
+    mndt::LioConfig c = e->lio.config();
+    c.blind = std::max(0.f, p->blind);
+    c.max_range = std::max(1.f, p->max_range);
+    c.scan_ds = std::max(0.02f, p->scan_ds);
+    c.map_res = std::max(0.02f, p->map_res);
+    c.vis_res = std::max(0.01f, p->vis_res);
+    c.max_iter = std::clamp(p->max_iter, 1, 20);
+    c.plane_thresh = std::max(0.005f, p->plane_thresh);
+    c.knn_max_d2 = std::max(0.01f, p->knn_max_d2);
+    c.gyr_cov = std::max(1e-6f, p->gyr_cov);
+    c.acc_cov = std::max(1e-6f, p->acc_cov);
+    c.laser_cov = std::max(1e-6f, p->laser_cov);
+    c.t_LI = mndt::Vec3(p->ext_t[0], p->ext_t[1], p->ext_t[2]);
+    c.ndt_res = std::max(0.1f, p->ndt_res);
+    c.loc_match_ok = std::clamp(p->loc_match_ok, 0.f, 1.f);
+    c.loc_init_radius = std::max(0.f, p->loc_init_radius);
+    e->lio.setConfig(c);
 }
 
 void slam_push(SlamHandle h, int32_t type, const uint8_t* buf, int32_t len) {

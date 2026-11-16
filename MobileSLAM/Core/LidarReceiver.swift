@@ -36,12 +36,12 @@ final class LidarReceiver: @unchecked Sendable {
     private var sink: ((Int32, UnsafePointer<UInt8>, Int32) -> Void)?
     private let sinkLock = NSLock()
 
-    /// Optional raw packet recorder (format: [type u8][len u16 LE][bytes]).
-    var recorder: PacketRecorder? {
+    /// Optional packet recorder (raw .livox or ROS 2 bag).
+    var recorder: (any PacketRecording)? {
         get { sinkLock.withLock { rec } }
         set { sinkLock.withLock { rec = newValue } }
     }
-    private var rec: PacketRecorder?
+    private var rec: (any PacketRecording)?
 
     // ---- Ethernet status ----
     private(set) var ethAddrs: String = "-"
@@ -75,6 +75,7 @@ final class LidarReceiver: @unchecked Sendable {
     deinit {
         monitor.cancel()
         stopDemo()
+        stopBag()
         stop()
         live_destroy(live)
     }
@@ -155,6 +156,45 @@ final class LidarReceiver: @unchecked Sendable {
     /// The simulated sensor stands still for 3 s (IMU initialisation), then moves again.
     func restartDemoMotion() {
         if let d = demo { demo_restart_motion(d) }
+    }
+
+    // ------------------------------------------------------------------ rosbag playback
+
+    private var player: RosbagPlayerHandle?
+    var bagPlaying: Bool { player != nil }
+
+    /// Plays a ROS 2 bag through the same path as real UDP packets (call from the main thread).
+    func startBag(_ url: URL, speed: Double) {
+        stopBag()
+        let ctx = Unmanaged.passUnretained(self).toOpaque()
+        player = url.withUnsafeFileSystemRepresentation { path in
+            rosbag_play_start(path!, speed, { ctx, type, buf, len in
+                guard let ctx, let buf else { return }
+                Unmanaged<LidarReceiver>.fromOpaque(ctx).takeUnretainedValue().inject(type, buf, len)
+            }, ctx)
+        }
+        state.withLock {
+            $0.lidarInfo = "rosbag " + url.lastPathComponent
+            $0.lastUdpCnt = -1
+        }
+    }
+
+    var bagStatus: RosbagStatus? {
+        guard let p = player else { return nil }
+        var s = RosbagStatus()
+        rosbag_play_status(p, &s)
+        return s
+    }
+
+    func stopBag() {
+        guard let p = player else { return }
+        rosbag_play_stop(p)   // joins the thread: no callbacks after this
+        player = nil
+        state.withLock {
+            $0.lidarInfo = L("未検出")
+            $0.lidarSrc = "-"
+            $0.lastUdpCnt = -1
+        }
     }
 
     private func inject(_ type: Int32, _ buf: UnsafePointer<UInt8>, _ len: Int32) {
@@ -348,8 +388,47 @@ final class LidarReceiver: @unchecked Sendable {
     }
 }
 
-/// Buffered writer for raw packets. Thread safe.
-final class PacketRecorder: @unchecked Sendable {
+/// Something that stores incoming packets (type 1 = point, 2 = IMU). Thread safe.
+protocol PacketRecording: AnyObject, Sendable {
+    var url: URL { get }
+    var bytes: Int64 { get }
+    func write(type: UInt8, _ p: UnsafeRawBufferPointer)
+    func close()
+}
+
+/// Records a ROS 2 bag (MCAP): /livox/imu and /livox/lidar (PointCloud2 with per-point timestamps).
+final class RosbagRecorder: PacketRecording, @unchecked Sendable {
+    let url: URL
+    private var h: RosbagWriterHandle?
+    private let lock = NSLock()
+
+    init(url: URL) throws {
+        guard let w = url.withUnsafeFileSystemRepresentation({ rosbag_writer_open($0!) }) else {
+            throw NSError(domain: "rosbag", code: 1, userInfo: [NSLocalizedDescriptionKey: L("ファイルを作成できません")])
+        }
+        h = w
+        self.url = url
+    }
+
+    var bytes: Int64 { lock.withLock { h.map { rosbag_writer_bytes($0) } ?? 0 } }
+
+    func write(type: UInt8, _ p: UnsafeRawBufferPointer) {
+        guard let base = p.baseAddress?.assumingMemoryBound(to: UInt8.self) else { return }
+        lock.withLock {
+            if let h { rosbag_writer_push(h, Int32(type), base, Int32(p.count)) }
+        }
+    }
+
+    func close() {
+        lock.withLock {
+            if let h { rosbag_writer_close(h) }
+            h = nil
+        }
+    }
+}
+
+/// Buffered writer for raw packets (format: [type u8][len u16 LE][bytes]). Thread safe.
+final class PacketRecorder: PacketRecording, @unchecked Sendable {
     let url: URL
     private let handle: FileHandle
     private var buf = Data()

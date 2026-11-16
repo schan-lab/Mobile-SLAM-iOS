@@ -33,6 +33,10 @@ final class AppModel: ObservableObject {
     @Published var toast: String?
     /// Synthetic Mid-360 data instead of the real sensor (for trying the app without hardware).
     @Published private(set) var demoMode = false
+    /// ROS 2 bag used as the sensor instead of the Mid-360 (played while SLAM runs).
+    @Published private(set) var bag: MapStore.Item?
+    @Published var showBagPicker = false
+    @Published private(set) var bagProgress: RosbagStatus?
 
     @Published private(set) var st = SlamStatus()
     @Published private(set) var chipEth = Chip(ok: false, label: L("Ethernet 未接続"))
@@ -52,7 +56,7 @@ final class AppModel: ObservableObject {
     init() {
         let engine = self.engine
         receiver.packetSink = { type, buf, len in engine.push(type, buf, len) }
-        engine.setBlind(AppSettings.blind)
+        engine.setParams(AppSettings.slamParams)
     }
 
     var running: Bool { st.isRunning }
@@ -61,7 +65,7 @@ final class AppModel: ObservableObject {
 
     /// Pushes the saved settings to the SLAM core and the view (called whenever we come to the front).
     func applySettings() {
-        engine.setBlind(AppSettings.blind)
+        engine.setParams(AppSettings.slamParams)
         mapView.colorMode = AppSettings.colorMode
     }
 
@@ -94,6 +98,7 @@ final class AppModel: ObservableObject {
         if receiver.recorder != nil { toggleRecord() }
         if engine.status.isRunning { engine.stop() }   // map is kept; only start() resets
         mapView.isPaused = true
+        receiver.stopBag()
         receiver.stopDemo()
         receiver.stop()
         UIApplication.shared.isIdleTimerDisabled = false
@@ -121,9 +126,12 @@ final class AppModel: ObservableObject {
             if pickMode { togglePickPose() }
             receiver.restartDemoMotion()   // demo: stand still for the IMU initialisation
             engine.start(mode)
+            if let bag { receiver.startBag(bag.url, speed: AppSettings.playSpeed) }   // from the beginning
             mapStart = Date()
         } else {
             engine.stop()
+            receiver.stopBag()
+            bagProgress = nil
         }
         st = engine.status
         updateStatus()
@@ -216,10 +224,68 @@ final class AppModel: ObservableObject {
     func setDemoMode(_ on: Bool) {
         guard on != demoMode else { return }
         if engine.status.isRunning { engine.stop() }
+        if on { exitBag() }
         demoMode = on
         if on { receiver.startDemo() } else { receiver.stopDemo() }
         showToast(on ? L("デモ: 疑似 Mid-360 の点群を流しています") : L("デモを終了しました"))
         updateStatus()
+    }
+
+    // ------------------------------------------------------------------ rosbag playback
+
+    func pickBag() {
+        if engine.status.isRunning {
+            showToast(L("停止してから rosbag を選んでください"))
+            return
+        }
+        showBagPicker = true
+    }
+
+    /// Uses the bag as the sensor: SLAM start plays it from the beginning.
+    func selectBag(_ item: MapStore.Item) {
+        Task.detached(priority: .userInitiated) {
+            var probe = RosbagStatus()
+            let ok = item.url.withUnsafeFileSystemRepresentation { rosbag_probe($0!, &probe) } != 0
+            let s = probe
+            await MainActor.run {
+                guard ok else {
+                    self.showToast(String(format: L("rosbag を読めません: %@"), s.errorText))
+                    return
+                }
+                if self.engine.status.isRunning { self.engine.stop() }
+                self.receiver.stopBag()
+                if self.demoMode { self.setDemoMode(false) }
+                self.bag = item
+                self.bagProgress = nil
+                self.showToast(String(format: L("rosbag: %1$@ + %2$@  開始を押すと再生します"), s.lidarTopic, s.imuTopic))
+                self.updateStatus()
+            }
+        }
+    }
+
+    /// Back to the live sensor.
+    func exitBag() {
+        guard bag != nil else { return }
+        if engine.status.isRunning { engine.stop() }
+        receiver.stopBag()
+        bag = nil
+        bagProgress = nil
+        updateStatus()
+    }
+
+    /// Stops SLAM when the bag has been played to the end (the map stays for saving).
+    private func checkBag() {
+        guard bag != nil, let s = receiver.bagStatus else { return }
+        bagProgress = s
+        if s.state == 0 { return }
+        engine.stop()
+        receiver.stopBag()
+        st = engine.status
+        if s.state == 1 {
+            showToast(L("rosbag の再生が終わりました"))
+        } else {
+            showToast(String(format: L("rosbag の再生エラー: %@"), s.errorText))
+        }
     }
 
     func savePcd() {
@@ -237,11 +303,18 @@ final class AppModel: ObservableObject {
             receiver.recorder = nil
             cur.close()
             recordLabel = nil
-            showToast(String(format: L("生データ保存: %@"), "raw/" + cur.url.lastPathComponent))
+            let name = "raw/" + cur.url.lastPathComponent
+            showToast(String(format: cur is RosbagRecorder ? L("rosbag 保存: %@") : L("生データ保存: %@"), name))
         } else {
-            let url = MapStore.rawDir.appendingPathComponent("raw_\(MapStore.timestamp()).livox")
             do {
-                receiver.recorder = try PacketRecorder(url: url)
+                switch AppSettings.recordFormat {
+                case .rosbag:
+                    let url = MapStore.rawDir.appendingPathComponent("rosbag_\(MapStore.timestamp()).mcap")
+                    receiver.recorder = try RosbagRecorder(url: url)
+                case .raw:
+                    let url = MapStore.rawDir.appendingPathComponent("raw_\(MapStore.timestamp()).livox")
+                    receiver.recorder = try PacketRecorder(url: url)
+                }
                 recordLabel = "■ 0MB"
             } catch {
                 showToast(String(format: L("記録を開始できません: %@"), error.localizedDescription))
@@ -278,16 +351,17 @@ final class AppModel: ObservableObject {
         let ips = Double(c.imuPackets - prev.imuPackets) / dt
         prevT = now
         prev = c
+        checkBag()
         st = engine.status
         receiver.refreshInterfaces()
 
         chipEth = Chip(ok: receiver.ethUp, label: receiver.ethUp ? "Ethernet" : L("Ethernet 未接続"))
-        let lidarName = demoMode ? L("デモ") : "Mid-360"
+        let lidarName = bag != nil ? "rosbag" : demoMode ? L("デモ") : "Mid-360"
         chipLidar = Chip(ok: pps > 100, label: pps > 100 ? String(format: L("%@  %.0fk点/s"), lidarName, ptps / 1000) : L("LiDAR 受信なし"))
         chipImu = Chip(ok: ips > 50, label: String(format: "IMU %.0fHz", ips))
 
         headline = {
-            if running && !st.isTracking { return L("静止してください…") }
+            if running && !st.isTracking { return bag != nil ? L("IMU を初期化中…") : L("静止してください…") }
             if mode == .localization && running {
                 switch st.loc_state {
                 case 2: return String(format: L("一致 %.0f%%  (%.2f, %.2f)  %.0f°"), st.match * 100, st.px, st.py, st.yaw * 180 / .pi)
@@ -296,11 +370,15 @@ final class AppModel: ObservableObject {
                 }
             }
             if mode == .localization { return st.hasPrior ? L("開始できます（初期位置の指定は任意）") : L("マップを選択してください") }
+            if running, bag != nil, let p = bagProgress {
+                return String(format: L("rosbag %.0f%%   %@点"), p.progress * 100, st.vis_size.formatted())
+            }
             if running {
                 let sec = Int(Date().timeIntervalSince(mapStart))
                 return String(format: L("%d:%02d   %@点"), sec / 60, sec % 60, st.vis_size.formatted())
             }
             if st.scans > 0 { return String(format: L("%@点  PCD保存できます"), st.vis_size.formatted()) }
+            if bag != nil { return L("rosbag: 開始を押すと再生します") }
             if demoMode { return L("デモ: 開始を押してください") }
             if !chipLidar.ok { return L("LiDAR 待機中（設定からデモを試せます）") }
             return L("待機中")
@@ -312,6 +390,10 @@ final class AppModel: ObservableObject {
         d += (receiver.ethUp ? L("Ethernet接続") : L("Ethernet待機中…")) + "\n"
         d += receiver.ethAddrs + "\n"
         d += "LiDAR \(c.lidarInfo)  from \(c.lidarSrc)\n"
+        if bag != nil, let p = bagProgress {
+            d += String(format: "bag %.1f/%.1f s  %@ %lld  %@ %lld\n", p.elapsed, p.duration,
+                        p.lidarTopic, p.point_msgs, p.imuTopic, p.imu_msgs)
+        }
         d += String(format: "pkt %.0f/s  pts %.0f/s  lost %lld\n", pps, ptps, c.lostPackets)
         if mode == .localization {
             d += String(format: "NDT %.1f ms  match %.2f  state %d\n", st.ndt_ms, st.match, st.loc_state)
@@ -321,6 +403,15 @@ final class AppModel: ObservableObject {
         d += String(format: "scans %lld  drop scan %lld pkt %lld  q %d", st.scans, st.dropped_scans, st.dropped_pkts, st.queue)
         details = d
     }
+}
+
+extension RosbagStatus {
+    private static func text<T>(_ v: T) -> String {
+        withUnsafePointer(to: v) { $0.withMemoryRebound(to: CChar.self, capacity: MemoryLayout<T>.size) { String(cString: $0) } }
+    }
+    var errorText: String { Self.text(error) }
+    var lidarTopic: String { Self.text(lidar_topic) }
+    var imuTopic: String { Self.text(imu_topic) }
 }
 
 /// Triggers the iOS local network permission prompt early (a Bonjour browse is the documented trigger);

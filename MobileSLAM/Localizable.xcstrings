@@ -31,6 +31,16 @@
         }
       }
     },
+    "%@ に送信中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sending to %@…"
+          }
+        }
+      }
+    },
     "%@ の有線 LAN": {
       "localizations": {
         "en": {
@@ -67,6 +77,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%d:%02d   %@ points"
+          }
+        }
+      }
+    },
+    "1スキャンあたりのカルマンフィルタ更新の最大反復回数です。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum Kalman filter update iterations per scan."
           }
         }
       }
@@ -121,6 +141,26 @@
         }
       }
     },
+    "IMU から見た LiDAR 原点の位置です。Mid-360 の内蔵 IMU なら規定値のままで構いません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position of the LiDAR origin seen from the IMU. Keep the defaults for the Mid-360's built-in IMU."
+          }
+        }
+      }
+    },
+    "IMU を初期化中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Initializing the IMU…"
+          }
+        }
+      }
+    },
     "IP アドレスと送信先": {
       "localizations": {
         "en": {
@@ -137,6 +177,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Invalid IP address: %@"
+          }
+        }
+      }
+    },
+    "LiDAR のノイズ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LiDAR noise"
+          }
+        }
+      }
+    },
+    "LiDAR の取り付け位置（IMU 座標系）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LiDAR position (IMU frame)"
           }
         }
       }
@@ -301,12 +361,32 @@
         }
       }
     },
+    "NDT の格子サイズ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NDT voxel size"
+          }
+        }
+      }
+    },
     "NDTマップを作れませんでした": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Could not build the NDT map"
+          }
+        }
+      }
+    },
+    "PCD や rosbag を PC やサーバーに SFTP で送ります。送信は PCD ビューア・rosbag の一覧から行います。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send PCDs and rosbags to a PC or server over SFTP, from the PCD viewer and rosbag lists."
           }
         }
       }
@@ -327,6 +407,146 @@
           "stringUnit": {
             "state": "translated",
             "value": "Save PCD"
+          }
+        }
+      }
+    },
+    "ROS 2 (MCAP)：/livox/imu（sensor_msgs/Imu）と /livox/lidar（sensor_msgs/PointCloud2、点ごとのタイムスタンプ付き）を記録します。ros2 bag play や Foxglove でそのまま開けます。\n生パケット：Mid-360 の UDP パケットをそのまま保存します。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ROS 2 (MCAP): records /livox/imu (sensor_msgs/Imu) and /livox/lidar (sensor_msgs/PointCloud2 with per-point timestamps). Opens directly in ros2 bag play and Foxglove.\nRaw packets: saves the Mid-360's UDP packets as they are."
+          }
+        }
+      }
+    },
+    "SFTP で送信": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send via SFTP"
+          }
+        }
+      }
+    },
+    "SFTP 設定でキーペアを作成し、公開鍵をサーバーに登録してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a key pair in the SFTP settings and register the public key on the server."
+          }
+        }
+      }
+    },
+    "SFTP 設定でコピーした公開鍵をサーバーに登録してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Register the public key copied in the SFTP settings on the server."
+          }
+        }
+      }
+    },
+    "rosbag %.0f%%   %@点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rosbag %.0f%%   %@ pts"
+          }
+        }
+      }
+    },
+    "rosbag から SLAM するときの再生速度です。速くすると処理が追いつかずスキャンを捨てることがあります。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playback speed when running SLAM from a rosbag. When faster, processing may fall behind and drop scans."
+          }
+        }
+      }
+    },
+    "rosbag がありません。\n「● 記録」で保存するか、PC などで ros2 bag record した MCAP ファイルを「ファイルを開く」で取り込んでください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No rosbags yet.\nRecord one with \"● Record\", or import an MCAP file made with ros2 bag record via \"Open File\"."
+          }
+        }
+      }
+    },
+    "rosbag の再生が終わりました": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finished playing the rosbag"
+          }
+        }
+      }
+    },
+    "rosbag の再生エラー: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rosbag playback error: %@"
+          }
+        }
+      }
+    },
+    "rosbag を読めません: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot read the rosbag: %@"
+          }
+        }
+      }
+    },
+    "rosbag を選択": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a rosbag"
+          }
+        }
+      }
+    },
+    "rosbag 保存: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rosbag saved: %@"
+          }
+        }
+      }
+    },
+    "rosbag: %1$@ + %2$@  開始を押すと再生します": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rosbag: %1$@ + %2$@  Press Start to play"
+          }
+        }
+      }
+    },
+    "rosbag: 開始を押すと再生します": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rosbag: press Start to play"
           }
         }
       }
@@ -401,12 +621,42 @@
         }
       }
     },
-    "このアプリは個人情報や利用状況を一切収集・送信しません。ローカルネットワークへのアクセスは、有線 LAN でつないだ LiDAR からデータを受信するためだけに使います。作成したマップや記録はこの %1$@ 内（ファイル App の「この%1$@内 › Mobile SLAM」）にだけ保存されます。": {
+    "このアプリは個人情報や利用状況を一切収集しません。ネットワークは、有線 LAN でつないだ LiDAR からデータを受信するためと、あなたが指定したサーバーへ SFTP でファイルを送るためだけに使います。作成したマップや記録はこの %1$@ 内（ファイル App の「この%1$@内 › Mobile SLAM」）に保存され、あなたが SFTP 送信や共有をしたときだけ、その送信先に送られます。": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "This app does not collect or send any personal or usage data. Local network access is used only to receive data from a LiDAR connected over wired Ethernet. Maps and recordings are stored only on this %1$@ (Files app › On My %1$@ › Mobile SLAM)."
+            "value": "This app does not collect any personal information or usage data. The network is used only to receive data from the LiDAR connected by wired LAN and to send files over SFTP to servers you specify. Maps and recordings are stored on this %1$@ (Files app › On My %1$@ › Mobile SLAM) and are sent only to the destination you choose when you send them via SFTP or share them."
+          }
+        }
+      }
+    },
+    "これより遠い点を使いません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Points farther than this are not used."
+          }
+        }
+      }
+    },
+    "すべて規定値に戻しますか？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset all to defaults?"
+          }
+        }
+      }
+    },
+    "すべて規定値に戻す": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset all to defaults"
           }
         }
       }
@@ -441,12 +691,82 @@
         }
       }
     },
+    "キーペア": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key pair"
+          }
+        }
+      }
+    },
+    "キーペアがありません。SFTP 設定で作成してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No key pair. Create one in the SFTP settings."
+          }
+        }
+      }
+    },
+    "キーペアと送信先": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key pair and destinations"
+          }
+        }
+      }
+    },
+    "キーペアを作り直しますか？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regenerate the key pair?"
+          }
+        }
+      }
+    },
+    "キーペアを作り直す": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regenerate key pair"
+          }
+        }
+      }
+    },
+    "キーペアを作成": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create key pair"
+          }
+        }
+      }
+    },
     "ゲートウェイ": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Gateway"
+          }
+        }
+      }
+    },
+    "コピーしました": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
           }
         }
       }
@@ -461,6 +781,46 @@
         }
       }
     },
+    "サーバーのホスト鍵が前回と違います。接続先が正しいか確認し、問題なければ接続先の設定でホスト鍵をリセットしてください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server's host key differs from last time. Check that this is the right server, and if so, reset the host key in the destination settings."
+          }
+        }
+      }
+    },
+    "ジャイロのノイズ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gyro noise"
+          }
+        }
+      }
+    },
+    "スキャンとマップ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan and map"
+          }
+        }
+      }
+    },
+    "スキャンの間引き": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan downsampling"
+          }
+        }
+      }
+    },
     "ソケット作成失敗: %@": {
       "localizations": {
         "en": {
@@ -471,12 +831,12 @@
         }
       }
     },
-    "タップで表示・左にスワイプか長押しで共有・削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます": {
+    "タップで表示・左にスワイプか長押しで共有・SFTP 送信・削除\nファイル App の「この%@内 › Mobile SLAM」からも取り出せます": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tap to view · swipe left or long-press to share or delete\nAlso available in Files › On My %@ › Mobile SLAM"
+            "value": "Tap to view. Swipe left or long-press to share, send via SFTP or delete.\nFiles are also in the Files app under \"On My %@ › Mobile SLAM\""
           }
         }
       }
@@ -487,6 +847,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tap to select"
+          }
+        }
+      }
+    },
+    "タップで選択・左にスワイプか長押しで共有・SFTP 送信・削除\n対応: ROS 2 の MCAP（無圧縮・zstd・lz4）。PointCloud2 または Livox CustomMsg と、Imu のトピックを使います。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to choose. Swipe left or long-press to share, send via SFTP or delete.\nSupported: ROS 2 MCAP (uncompressed, zstd, lz4) with a PointCloud2 or Livox CustomMsg topic and an Imu topic."
           }
         }
       }
@@ -551,12 +921,62 @@
         }
       }
     },
+    "ノイズ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noise"
+          }
+        }
+      }
+    },
     "バージョン %@": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Version %@"
+          }
+        }
+      }
+    },
+    "パスワード": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        }
+      }
+    },
+    "パスワードが設定されていません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No password is set."
+          }
+        }
+      }
+    },
+    "パスワードはこの端末のキーチェーンに保存します。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The password is stored in this device's keychain."
+          }
+        }
+      }
+    },
+    "ファイルを作成できません": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot create the file"
           }
         }
       }
@@ -577,6 +997,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "Privacy"
+          }
+        }
+      }
+    },
+    "ホスト": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Host"
+          }
+        }
+      }
+    },
+    "ホスト鍵": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Host key"
+          }
+        }
+      }
+    },
+    "ホスト鍵をリセット": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset host key"
+          }
+        }
+      }
+    },
+    "ポート": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Port"
           }
         }
       }
@@ -661,6 +1121,16 @@
         }
       }
     },
+    "ユーザー名": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "User"
+          }
+        }
+      }
+    },
     "ライセンス: Eigen 3.4.0 (Mozilla Public License 2.0)": {
       "localizations": {
         "en": {
@@ -677,6 +1147,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "License: Mobile SLAM (MIT License)"
+          }
+        }
+      }
+    },
+    "ライセンス: その他のオープンソース": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licenses: other open source"
           }
         }
       }
@@ -711,6 +1191,86 @@
         }
       }
     },
+    "一致率のしきい値": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match threshold"
+          }
+        }
+      }
+    },
+    "中止": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "中止しました": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelled"
+          }
+        }
+      }
+    },
+    "今の鍵は使えなくなります。新しい公開鍵を各サーバーに登録し直してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The current key will stop working. Register the new public key on each server again."
+          }
+        }
+      }
+    },
+    "位置合わせ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registration"
+          }
+        }
+      }
+    },
+    "位置合わせに使う点をこの大きさの格子で間引きます。大きいほど速く、小さいほど細かく合わせます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voxel size for thinning the points used for registration. Larger is faster; smaller aligns more finely."
+          }
+        }
+      }
+    },
+    "位置合わせ用マップの解像度": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registration map resolution"
+          }
+        }
+      }
+    },
+    "作り直す": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regenerate"
+          }
+        }
+      }
+    },
     "作成中のマップは表示から消えます。必要なら先に「PCD保存」してください。": {
       "localizations": {
         "en": {
@@ -731,6 +1291,16 @@
         }
       }
     },
+    "保存": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
     "保存しました: %@": {
       "localizations": {
         "en": {
@@ -741,12 +1311,32 @@
         }
       }
     },
+    "保存する PCD の点の間隔です。小さいほど細かく、ファイルが大きくなります。次に開始したときから反映されます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point spacing of the saved PCD. Smaller is finer and makes larger files. Applies from the next start."
+          }
+        }
+      }
+    },
     "保存失敗: PCD書き出し失敗": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Save failed: could not write the PCD"
+          }
+        }
+      }
+    },
+    "停止してから rosbag を選んでください": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop before choosing a rosbag"
           }
         }
       }
@@ -791,12 +1381,32 @@
         }
       }
     },
+    "公開鍵をコピー": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy public key"
+          }
+        }
+      }
+    },
     "共有": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Share"
+          }
+        }
+      }
+    },
+    "再生速度": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playback speed"
           }
         }
       }
@@ -827,6 +1437,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Initial position (%.2f, %.2f)  heading searched automatically"
+          }
+        }
+      }
+    },
+    "初期位置の探索半径": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Initial pose search radius"
           }
         }
       }
@@ -871,6 +1491,16 @@
         }
       }
     },
+    "加速度のノイズ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accelerometer noise"
+          }
+        }
+      }
+    },
     "反射強度": {
       "localizations": {
         "en": {
@@ -891,12 +1521,42 @@
         }
       }
     },
+    "反復回数": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iterations"
+          }
+        }
+      }
+    },
+    "名前（任意）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name (optional)"
+          }
+        }
+      }
+    },
     "地図をタッチ: 位置   そのままドラッグ: 向き   (2本指: 移動 / ピンチ: ズーム)": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Touch the map: position   drag: heading   (2 fingers: pan / pinch: zoom)"
+          }
+        }
+      }
+    },
+    "変更はメイン画面に戻ると反映されます（解像度は次に開始したときから）。分からないときは規定値のまま使ってください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changes apply when you return to the main screen (resolutions from the next start). If unsure, keep the defaults."
           }
         }
       }
@@ -911,6 +1571,16 @@
         }
       }
     },
+    "実機に戻る": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to sensor"
+          }
+        }
+      }
+    },
     "実装について": {
       "localizations": {
         "en": {
@@ -921,12 +1591,62 @@
         }
       }
     },
+    "小さいほど LiDAR を信頼し、大きいほど IMU を信頼します。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smaller trusts the LiDAR more; larger trusts the IMU more."
+          }
+        }
+      }
+    },
+    "平面とみなす誤差": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plane fit tolerance"
+          }
+        }
+      }
+    },
+    "平面を作る5点目までの距離の2乗の上限です。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upper limit of the squared distance to the 5th point of a plane."
+          }
+        }
+      }
+    },
     "待機中": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Waiting"
+          }
+        }
+      }
+    },
+    "戻す": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
+          }
+        }
+      }
+    },
+    "指定した初期位置のまわりを探す範囲です。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How far around the given initial pose to search."
           }
         }
       }
@@ -1001,6 +1721,26 @@
         }
       }
     },
+    "最初に接続したときのサーバーの鍵です。違う鍵のサーバーには送信しません。サーバーを入れ替えたときはリセットしてください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server's key from the first connection. Files are not sent to a server with a different key. Reset it if the server was replaced."
+          }
+        }
+      }
+    },
+    "最大距離": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max range"
+          }
+        }
+      }
+    },
     "未接続": {
       "localizations": {
         "en": {
@@ -1027,6 +1767,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Detected Mid-360"
+          }
+        }
+      }
+    },
+    "次に開始したときから反映されます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applies from the next start."
           }
         }
       }
@@ -1101,12 +1851,52 @@
         }
       }
     },
+    "生パケット": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raw packets"
+          }
+        }
+      }
+    },
+    "研究室の PC": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lab PC"
+          }
+        }
+      }
+    },
+    "秘密鍵はこの端末のキーチェーンにだけ保存され、外に出ません。公開鍵をコピーして、送信先サーバーの ~/.ssh/authorized_keys に1行で追加してください。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The private key is stored only in this device's keychain and never leaves it. Copy the public key and add it as one line to ~/.ssh/authorized_keys on the server."
+          }
+        }
+      }
+    },
     "自己位置推定": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Localization"
+          }
+        }
+      }
+    },
+    "自己位置推定でマップを表す格子の大きさです。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Size of the cells representing the map in localization."
           }
         }
       }
@@ -1131,6 +1921,16 @@
         }
       }
     },
+    "表示・PCD の解像度": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display / PCD resolution"
+          }
+        }
+      }
+    },
     "見失いました。再探索中…": {
       "localizations": {
         "en": {
@@ -1141,12 +1941,32 @@
         }
       }
     },
+    "規定 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default %@"
+          }
+        }
+      }
+    },
     "規定値に戻す": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Reset to Default"
+          }
+        }
+      }
+    },
+    "記録の形式": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recording format"
           }
         }
       }
@@ -1181,6 +2001,36 @@
         }
       }
     },
+    "詳細パラメータ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advanced parameters"
+          }
+        }
+      }
+    },
+    "認証": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authentication"
+          }
+        }
+      }
+    },
+    "認証に失敗しました（公開鍵の登録・ユーザー名・パスワードを確認してください）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authentication failed (check the registered public key, user name and password)"
+          }
+        }
+      }
+    },
     "読み込みました。現在の送信先は %@ です。": {
       "localizations": {
         "en": {
@@ -1211,6 +2061,36 @@
         }
       }
     },
+    "転送先パス": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remote path"
+          }
+        }
+      }
+    },
+    "転送先パスは / で始めると絶対パス、それ以外はログインしたディレクトリからの相対パスです。ないフォルダは作ります。空欄ならログインしたディレクトリに送ります。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A path starting with / is absolute; otherwise it is relative to the login directory. Missing folders are created. Leave empty to send to the login directory."
+          }
+        }
+      }
+    },
+    "近くの点を平面に当てはめるときの許容誤差です。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tolerance when fitting a plane to nearby points."
+          }
+        }
+      }
+    },
     "近くの点を無視する距離": {
       "localizations": {
         "en": {
@@ -1221,12 +2101,62 @@
         }
       }
     },
+    "近傍探索の範囲": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neighbor search range"
+          }
+        }
+      }
+    },
     "追跡中": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Tracking"
+          }
+        }
+      }
+    },
+    "追跡中、これより一致率が低い結果は使いません。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While tracking, results with a lower match ratio are not used."
+          }
+        }
+      }
+    },
+    "送信しました: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sent: %@"
+          }
+        }
+      }
+    },
+    "送信できませんでした: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not send: %@"
+          }
+        }
+      }
+    },
+    "送信先": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destinations"
           }
         }
       }
@@ -1251,12 +2181,32 @@
         }
       }
     },
+    "送信先がありません。追加してください。キーペアの作成と公開鍵のコピーは 設定 › SFTP でできます。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No destinations. Add one. Create the key pair and copy the public key in Settings › SFTP."
+          }
+        }
+      }
+    },
     "送信先だけを変える場合、再起動なしですぐに反映されます。": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Changing only the destination takes effect immediately, without a restart."
+          }
+        }
+      }
+    },
+    "送信先を追加": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add destination"
           }
         }
       }
