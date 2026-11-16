@@ -1,4 +1,4 @@
-# App Store Connect 入力内容（Mobile SLAM 1.0）
+# App Store Connect 入力内容（Mobile SLAM 1.2）
 
 ## アプリ情報
 
@@ -18,7 +18,7 @@
 | プライバシーポリシー URL | https://schan-lab.github.io/mobile-slam-support/privacy.html |
 | サポート URL | https://schan-lab.github.io/mobile-slam-support/ |
 | App のプライバシー | 「データの収集なし」 |
-| 輸出コンプライアンス | Info.plist で申告済み（暗号化なし） |
+| 輸出コンプライアンス | Info.plist で申告（1.2 から暗号化あり：SFTP 送信の SSH。標準的な暗号化アルゴリズムのみ、独自暗号なし） |
 | 対応機種 | iPhone のみ（iOS 17 以上） |
 
 ## プロモーションテキスト（170字以内）
@@ -34,7 +34,10 @@ Livox Mid-360 LiDAR を有線 LAN で iPhone に直結し、歩きながらそ�
 ・マップ作成（SLAM）：LiDAR と IMU を組み合わせたオドメトリで、歩きながら 3D マップを作成
 ・PCD 保存・閲覧：作ったマップを PCD ファイルで保存し、アプリ内で 3D 表示。ファイル App や共有シートから取り出せます
 ・自己位置推定：保存したマップに対して現在位置を推定。初期位置は地図をタッチして指定でき、省略すると自動で探索
-・生データ記録：受信したパケットをそのまま保存
+・rosbag 記録：ROS 2 の bag（MCAP）で IMU と点群（点ごとのタイムスタンプ付き）を記録。ros2 bag play や Foxglove でそのまま開けます
+・rosbag から SLAM：記録した bag や PC で記録した bag を再生しながらマップ作成・自己位置推定
+・SFTP 送信：マップや bag を PC やサーバーへ送信。送信先は複数登録でき、鍵ペアはアプリ内で作成
+・SLAM パラメータ：解像度やノイズなどを設定画面で調整
 ・Mid-360 のネットワーク設定：IP アドレスと送信先をアプリから確認・変更
 ・デモモード：実機がなくても、疑似データで一連の操作を試せます
 
@@ -48,9 +51,16 @@ Livox Mid-360 LiDAR を有線 LAN で iPhone に直結し、歩きながらそ�
 
 ※ Livox および Mid-360 は各社の商標です。本アプリは Livox とは関係のない独立したアプリです。
 
+## このバージョンの新機能（1.2）
+
+・rosbag 記録：「● 記録」で ROS 2 の bag（MCAP）を保存できるようになりました。IMU と、点ごとのタイムスタンプ付き点群を記録します。待機中・マップ作成中・自己位置推定中のどの状態でも記録できます
+・rosbag から SLAM：bag を再生しながらマップ作成・自己位置推定ができます（MCAP の無圧縮・zstd・lz4、PointCloud2 / Livox CustomMsg に対応）
+・SFTP 送信：PCD や bag を PC・サーバーへ送れます。送信先は複数登録でき、アプリ内で作った鍵ペアの公開鍵をコピーして使えます
+・SLAM の詳細パラメータを設定画面で変更できるようになりました
+
 ## キーワード（100字以内、カンマ区切り）
 
-LiDAR,SLAM,3D,点群,マップ,地図,スキャン,PCD,自己位置推定,ロボット,測量,NDT,IMU,点群表示
+LiDAR,SLAM,3D,点群,マップ,地図,スキャン,PCD,自己位置推定,ロボット,測量,NDT,IMU,点群表示,ROS,rosbag,SFTP
 
 ## 審査メモ（App Review Information → Notes、英語）
 
@@ -66,7 +76,13 @@ This app connects to a Livox Mid-360 LiDAR sensor over a wired Ethernet adapter 
 2. Video on real hardware
    - The attached video shows mapping, saving and localization with a real Mid-360 on an iPhone.
 
-Local network permission is requested only to receive UDP packets from the sensor. The app collects no data and has no account or login.
+3. New in 1.2 (all work in demo mode)
+   - rosbag recording: tap "● 記録" (Record) at any time, then tap it again ("■ … MB") to stop. A ROS 2 bag (.mcap) is saved.
+   - Mapping from a rosbag: tap "rosbag" (top card), choose the recorded bag, then tap "▶ マップ作成 開始". The bag is replayed and mapped; it stops by itself at the end.
+   - SFTP upload: Settings → SFTP → "キーペアを作成" (Create key pair) / "公開鍵をコピー" (Copy public key) and add a destination. Uploading needs an SSH server reachable from the device (any standard OpenSSH server with the copied public key in ~/.ssh/authorized_keys, or password login). Files are sent only to servers the user registers.
+   - Advanced SLAM parameters: Settings → SLAM → "詳細パラメータ".
+
+Local network permission is requested to receive UDP packets from the sensor and for SFTP uploads the user starts. The app collects no data and has no account or login. Encryption is used only for SSH/SFTP (standard algorithms).
 
 ## 添付・素材
 
@@ -99,7 +115,10 @@ FEATURES
 • Mapping (SLAM): build a 3D map as you walk, using LiDAR-inertial odometry
 • Save and view PCD: save maps as PCD files and view them in 3D in the app; export them from the Files app or the share sheet
 • Localization: estimate your position against a saved map. Tap the map to give a starting pose, or let the app search for it
-• Raw recording: save the received packets as they are
+• rosbag recording: record the IMU and point cloud (with per-point timestamps) as a ROS 2 bag (MCAP), ready for ros2 bag play and Foxglove
+• SLAM from a rosbag: replay a recorded bag, or one made on a PC, to build maps and localize
+• SFTP upload: send maps and bags to a PC or server; save several destinations and create the key pair in the app
+• SLAM parameters: tune resolutions, noise and more in Settings
 • Mid-360 network settings: view and change the sensor's IP address and data destination from the app
 • Demo mode: try every step with simulated data, no hardware needed
 
@@ -113,6 +132,13 @@ The app collects no data. Maps and recordings stay on your iPhone and are sent o
 
 Livox and Mid-360 are trademarks of their respective owners. This app is independent and not affiliated with Livox.
 
+## What's New in This Version (1.2)
+
+• rosbag recording: "● Record" now saves a ROS 2 bag (MCAP) with the IMU and the point cloud with per-point timestamps — while idle, mapping or localizing
+• SLAM from a rosbag: build maps and localize while replaying a bag (MCAP uncompressed / zstd / lz4, PointCloud2 or Livox CustomMsg)
+• SFTP upload: send PCDs and bags to a PC or server; save several destinations and copy the public key of a key pair made in the app
+• Advanced SLAM parameters in Settings
+
 ## Keywords
 
-LiDAR,SLAM,3D,point cloud,mapping,scan,PCD,localization,robotics,survey,NDT,IMU,viewer
+LiDAR,SLAM,3D,point cloud,mapping,scan,PCD,localization,robotics,survey,NDT,IMU,viewer,ROS,rosbag
