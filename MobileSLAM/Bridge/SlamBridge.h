@@ -37,8 +37,27 @@ void slam_stop(SlamHandle h);
 void slam_prepare(SlamHandle h, int32_t mode);
 /// Initial guess for localisation; has_yaw = 0 searches all headings. Triggers a new search when running.
 void slam_set_initial_pose(SlamHandle h, float x, float y, float z, float yaw, int32_t has_yaw);
-/// Points closer than m metres are ignored. Applies from the next scan.
-void slam_set_blind(SlamHandle h, float m);
+/// Tuning parameters (see core/lio.hpp LioConfig).
+typedef struct {
+    float blind;             // m, points closer than this are ignored
+    float max_range;         // m
+    float scan_ds;           // m, scan downsampling voxel
+    float map_res;           // m, registration map voxel (applies from the next start)
+    float vis_res;           // m, display / PCD map voxel (applies from the next start)
+    int32_t max_iter;        // IEKF iterations
+    float plane_thresh;      // m, plane fit tolerance
+    float knn_max_d2;        // m^2, max squared distance of the 5th neighbour
+    float gyr_cov, acc_cov;  // IMU process noise
+    float laser_cov;         // point-to-plane measurement noise
+    float ext_t[3];          // m, LiDAR origin in the IMU frame
+    float ndt_res;           // m, NDT voxel of the prior map
+    float loc_match_ok;      // min match ratio while tracking
+    float loc_init_radius;   // m, search radius around the initial guess
+} SlamParams;
+
+void slam_default_params(SlamParams* out);
+/// Applies the parameters. Scan / filter settings take effect from the next scan, map resolutions from the next start.
+void slam_set_params(SlamHandle h, const SlamParams* p);
 /// Raw Livox packet. type 1 = point, 2 = IMU. Thread safe.
 void slam_push(SlamHandle h, int32_t type, const uint8_t* buf, int32_t len);
 void slam_get_status(SlamHandle h, SlamStatus* out);
@@ -99,6 +118,42 @@ DemoHandle demo_start(DemoPacketFn fn, void* ctx);
 void demo_restart_motion(DemoHandle h);
 /// Stops the thread (no more callbacks after this returns).
 void demo_stop(DemoHandle h);
+
+// ------------------------------------------------------------------ ROS 2 bag (MCAP)
+
+typedef struct RosbagWriter* RosbagWriterHandle;
+
+/// Creates an MCAP file recording /livox/imu (sensor_msgs/Imu) and /livox/lidar (sensor_msgs/PointCloud2 with
+/// per-point timestamps). Returns NULL if the file cannot be created.
+RosbagWriterHandle rosbag_writer_open(const char* path);
+/// Raw Livox packet (type 1 = point, 2 = IMU). Thread safe.
+void rosbag_writer_push(RosbagWriterHandle h, int32_t type, const uint8_t* buf, int32_t len);
+int64_t rosbag_writer_bytes(RosbagWriterHandle h);
+/// Writes the summary / footer, closes the file and frees h.
+void rosbag_writer_close(RosbagWriterHandle h);
+
+typedef struct {
+    int32_t state;           // 0 playing, 1 finished, 2 error
+    double progress;         // 0..1 (bytes read)
+    double elapsed;          // s of bag time played
+    double duration;         // s, 0 when the bag has no summary
+    int64_t point_msgs, imu_msgs;
+    char lidar_topic[128];
+    char imu_topic[128];
+    char error[256];
+} RosbagStatus;
+
+/// Finds the LiDAR (sensor_msgs/PointCloud2 or livox CustomMsg) and IMU topics. Returns 1 if the bag can be played.
+int32_t rosbag_probe(const char* path, RosbagStatus* out);
+
+typedef struct RosbagPlayer* RosbagPlayerHandle;
+
+/// Plays the bag in real time (scaled by speed) on a background thread, converted to Livox packets
+/// (type 1 = point, 2 = IMU) passed to fn.
+RosbagPlayerHandle rosbag_play_start(const char* path, double speed, DemoPacketFn fn, void* ctx);
+void rosbag_play_status(RosbagPlayerHandle h, RosbagStatus* out);
+/// Stops the thread (no more callbacks after this returns) and frees h.
+void rosbag_play_stop(RosbagPlayerHandle h);
 
 #ifdef __cplusplus
 }

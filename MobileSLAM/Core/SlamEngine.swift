@@ -14,7 +14,10 @@ final class SlamEngine: @unchecked Sendable {
     func stop() { slam_stop(handle) }
     /// Switches mode while stopped (resets state).
     func prepare(_ mode: Mode) { slam_prepare(handle, mode.rawValue) }
-    func setBlind(_ m: Float) { slam_set_blind(handle, m) }
+    func setParams(_ p: SlamParams) {
+        var p = p
+        slam_set_params(handle, &p)
+    }
     /// Initial guess for localisation; yaw = nil searches all headings.
     func setInitialPose(x: Float, y: Float, yaw: Float?) {
         slam_set_initial_pose(handle, x, y, 0, yaw ?? 0, yaw == nil ? 0 : 1)

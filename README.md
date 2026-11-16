@@ -30,8 +30,31 @@ SLAM 本体（`core/`）は C++17 + Eigen で書いています。
 3. Mid-360 をつないで電源を入れ、画面上部の `Ethernet`、`Mid-360`、`IMU` が緑になれば受信できています。
 4. マップ作成 → 停止 → PCD 保存で地図ができます。保存した地図を読み込めば自己位置推定もできます。
 
-保存した PCD と生データは、ファイル App の「このiPhone内 › Mobile SLAM」から取り出せます
-（生データは `raw/` に保存され、iCloud バックアップの対象外です）。
+保存した PCD と記録は、ファイル App の「このiPhone内 › Mobile SLAM」から取り出せます
+（記録は `raw/` に保存され、iCloud バックアップの対象外です）。
+
+## rosbag（ROS 2 / MCAP）
+
+- **記録**: 「● 記録」で ROS 2 bag（MCAP、無圧縮）を保存します。待機中（ライブ表示だけ）・マップ作成中・自己位置推定中の
+  どの状態でも記録でき、記録の開始・停止は SLAM に影響しません。トピックは livox_ros_driver2 と同じです。
+  - `/livox/imu` `sensor_msgs/msg/Imu`（角速度 rad/s、加速度 m/s²、`orientation_covariance[0] = -1`）
+  - `/livox/lidar` `sensor_msgs/msg/PointCloud2`（10 Hz、フィールド `x y z intensity`(f32) `tag line`(u8)
+    `timestamp`(f64, 点ごとの絶対時刻 ns)、point_step 26）
+  - frame_id は `livox_frame`。Mid-360 の時計が未同期（起動からの時間）のときは、記録開始時に iPhone の時計へ合わせます。
+  - `ros2 bag play` / `ros2 bag info` / Foxglove でそのまま開けます。設定 → rosbag で生パケット形式にも戻せます。
+- **rosbag から SLAM**: 「rosbag」ボタンで bag を選んで開始すると、bag を実時間（0.5 / 1 / 2 倍速）で再生しながら
+  マップ作成・自己位置推定をします。読める形式は MCAP（無圧縮・zstd・lz4）で、LiDAR は `PointCloud2`
+  （点ごとの時刻フィールド `timestamp` / `time` / `t` などに対応）か Livox `CustomMsg`、IMU は `sensor_msgs/Imu`
+  （m/s² と g を自動判別）です。トピックは型と名前から自動で選びます。sqlite3（.db3）の bag は未対応です。
+- 再生した点群は Mid-360 のパケット形式に変換して実機と同じ経路に流すため、LiDAR→IMU の外部パラメータは
+  設定 → SLAM → 詳細パラメータ で合わせてください（規定値は Mid-360 内蔵 IMU）。
+
+## SFTP 送信
+
+PCD ビューア・rosbag の一覧で左スワイプか長押し → 「SFTP で送信」。送信先（ホスト・ポート・ユーザー・転送先パス）は
+設定 → SFTP で複数登録できます。認証はアプリ内で作る Ed25519 キーペア（秘密鍵はキーチェーンのみ、公開鍵はコピーして
+`~/.ssh/authorized_keys` に追加）かパスワードです。ホスト鍵は最初の接続時に記憶し、変わったら送信しません。
+SSH/SFTP には [Citadel](https://github.com/orlandos-nl/Citadel)（SwiftPM、0.12.0 固定）を使っています。
 
 ## ビルド
 
@@ -64,9 +87,10 @@ MobileSLAM/
   Views/         SwiftUI の画面
   PrivacyInfo.xcprivacy   プライバシーマニフェスト
 Config/Info.plist         ローカルネットワークの利用目的など
-tools/                    疑似 Mid-360
+tools/                    疑似 Mid-360、UI テスト用のサーバー
 core/                     SLAM 本体（LIO・NDT）
 third_party/eigen/        Eigen 3.4.0（ヘッダのみ）
+third_party/zstd/, lz4/   MCAP チャンクの展開用
 ```
 
 ## デモモード

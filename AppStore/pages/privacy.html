@@ -14,19 +14,20 @@
 </head>
 <body>
 <h1>プライバシーポリシー</h1>
-<p class="sub">Mobile SLAM（以下「本アプリ」）　制定日：2026年11月14日</p>
+<p class="sub">Mobile SLAM（以下「本アプリ」）　制定日：2026年11月14日　改定日：2026年11月16日</p>
 
 <h2>収集する情報</h2>
 <p>本アプリは、氏名・メールアドレス・位置情報・端末識別子・利用状況などの個人情報を一切収集しません。アカウント登録やログインもありません。</p>
 
 <h2>外部への送信</h2>
 <p>本アプリは、開発者や第三者のサーバーへデータを送信しません。広告、アクセス解析、トラッキングの仕組みも含みません。</p>
+<p>利用者が SFTP 送信を操作した場合に限り、選んだファイル（マップや記録）を、利用者自身が登録した送信先サーバーへ送ります。送信先の情報は開発者には送られません。</p>
 
 <h2>ローカルネットワークの利用</h2>
-<p>有線 LAN で接続した LiDAR（Livox Mid-360）から点群と IMU のデータを受信するためにのみ、ローカルネットワークを利用します。</p>
+<p>有線 LAN で接続した LiDAR（Livox Mid-360）から点群と IMU のデータを受信するため、および利用者が操作した SFTP 送信のためにのみ、ネットワークを利用します。</p>
 
 <h2>端末内に保存するデータ</h2>
-<p>作成したマップ（PCD ファイル）、記録した生データ、表示に関する設定は、お使いの iPhone の中にのみ保存されます。これらはファイル App から確認・削除でき、アプリを削除するとすべて消去されます。マップを共有するかどうかは、利用者が共有シートなどで明示的に操作した場合に限られます。</p>
+<p>作成したマップ（PCD ファイル）、記録したデータ（rosbag・生データ）、設定、SFTP の送信先は、お使いの iPhone の中にのみ保存されます。SFTP 用の秘密鍵とパスワードは端末のキーチェーンに保存され、端末の外へは出ません。これらはファイル App から確認・削除でき、アプリを削除するとすべて消去されます。マップを共有するかどうかは、利用者が共有シートなどで明示的に操作した場合に限られます。</p>
 
 <h2>改定</h2>
 <p>本ポリシーを改定する場合は、このページで公表します。</p>
@@ -36,6 +37,6 @@
 
 <hr>
 <h1>Privacy Policy</h1>
-<p>Mobile SLAM does not collect, store on any server, or share any personal data. It has no accounts, analytics, advertising or tracking. Local network access is used only to receive data from a LiDAR sensor connected by wired Ethernet. Maps, recordings and settings are stored only on your iPhone and are removed when the app is deleted. Contact: <a href="https://github.com/schan-lab/mobile-slam-support/issues">GitHub Issues</a>.</p>
+<p>Mobile SLAM does not collect, store on any server, or share any personal data. It has no accounts, analytics, advertising or tracking. The network is used only to receive data from a LiDAR sensor connected by wired Ethernet and, when you choose to, to upload files over SFTP to servers you registered yourself; nothing is sent to the developer. Maps, recordings, settings and SFTP destinations are stored only on your iPhone (SFTP keys and passwords in its keychain) and are removed when the app is deleted. Contact: <a href="https://github.com/schan-lab/mobile-slam-support/issues">GitHub Issues</a>.</p>
 </body>
 </html>

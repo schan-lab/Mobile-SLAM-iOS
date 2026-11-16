@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AD0000000000000000000001 /* Citadel in Frameworks */ = {isa = PBXBuildFile; productRef = AF0000000000000000000001 /* Citadel */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		AB0000000000000000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -46,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD0000000000000000000001 /* Citadel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +112,9 @@
 				A20000000000000000000002 /* core */,
 			);
 			name = MobileSLAM;
+			packageProductDependencies = (
+				AF0000000000000000000001 /* Citadel */,
+			);
 			productName = MobileSLAM;
 			productReference = A10000000000000000000001 /* MobileSLAM.app */;
 			productType = "com.apple.product-type.application";
@@ -161,6 +169,9 @@
 			);
 			mainGroup = A40000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AE0000000000000000000001 /* XCRemoteSwiftPackageReference "Citadel" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A40000000000000000000002 /* Products */;
 			projectDirPath = "";
@@ -416,6 +427,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AE0000000000000000000001 /* XCRemoteSwiftPackageReference "Citadel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orlandos-nl/Citadel";
+			requirement = {
+				kind = exactVersion;
+				version = 0.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AF0000000000000000000001 /* Citadel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AE0000000000000000000001 /* XCRemoteSwiftPackageReference "Citadel" */;
+			productName = Citadel;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A70000000000000000000001 /* Project object */;
 }

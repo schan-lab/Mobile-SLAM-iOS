@@ -5,6 +5,8 @@ struct SettingsView: View {
     @EnvironmentObject var model: AppModel
     @State private var blind = AppSettings.blind
     @State private var colorMode = AppSettings.colorMode
+    @State private var recordFormat = AppSettings.recordFormat
+    @State private var playSpeed = AppSettings.playSpeed
 
     var body: some View {
         ScrollView {
@@ -25,6 +27,40 @@ struct SettingsView: View {
                         .padding(.horizontal, 14).frame(height: 34)
                         .background(Capsule().fill(Theme.grey))
                         .buttonStyle(.plain)
+                    NavigationLink {
+                        SlamParamsView()
+                    } label: {
+                        HStack {
+                            Text("詳細パラメータ").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
+                            Spacer()
+                            Image(systemName: "chevron.right").foregroundStyle(Theme.textDim)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 4)
+                }
+                section("rosbag") {
+                    Text("記録の形式").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
+                    HStack(spacing: 8) {
+                        PillButton(label: "ROS 2 (MCAP)", color: recordFormat == .rosbag ? Theme.accent : Theme.grey,
+                                   fontSize: 14) { setFormat(.rosbag) }
+                        PillButton(label: L("生パケット"), color: recordFormat == .raw ? Theme.accent : Theme.grey,
+                                   fontSize: 14) { setFormat(.raw) }
+                    }
+                    Text("ROS 2 (MCAP)：/livox/imu（sensor_msgs/Imu）と /livox/lidar（sensor_msgs/PointCloud2、点ごとのタイムスタンプ付き）を記録します。ros2 bag play や Foxglove でそのまま開けます。\n生パケット：Mid-360 の UDP パケットをそのまま保存します。")
+                        .font(.system(size: 12)).foregroundStyle(Theme.textDim)
+                    Text("再生速度").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text).padding(.top, 4)
+                    HStack(spacing: 8) {
+                        ForEach(AppSettings.playSpeeds, id: \.self) { v in
+                            PillButton(label: String(format: "%gx", v), color: playSpeed == v ? Theme.accent : Theme.grey,
+                                       fontSize: 14) {
+                                playSpeed = v
+                                AppSettings.playSpeed = v
+                            }
+                        }
+                    }
+                    Text("rosbag から SLAM するときの再生速度です。速くすると処理が追いつかずスキャンを捨てることがあります。")
+                        .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
                 section(L("表示")) {
                     Text("点群の色").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
@@ -49,6 +85,20 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.plain)
                     Text(String(format: L("Mid-360 の IP アドレスや、点群の送り先（この %@ の IP）を確認・変更します。"), Device.name))
+                        .font(.system(size: 12)).foregroundStyle(Theme.textDim)
+                }
+                section("SFTP") {
+                    NavigationLink {
+                        SftpSettingsView()
+                    } label: {
+                        HStack {
+                            Text("キーペアと送信先").font(.system(size: 15, weight: .bold)).foregroundStyle(Theme.text)
+                            Spacer()
+                            Image(systemName: "chevron.right").foregroundStyle(Theme.textDim)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    Text("PCD や rosbag を PC やサーバーに SFTP で送ります。送信は PCD ビューア・rosbag の一覧から行います。")
                         .font(.system(size: 12)).foregroundStyle(Theme.textDim)
                 }
                 section(L("デモ")) {
@@ -77,6 +127,11 @@ struct SettingsView: View {
         }
         .background(Theme.bg)
         .navigationTitle("設定")
+    }
+
+    private func setFormat(_ f: AppSettings.RecordFormat) {
+        recordFormat = f
+        AppSettings.recordFormat = f
     }
 
     private func setColor(_ m: Int32) {

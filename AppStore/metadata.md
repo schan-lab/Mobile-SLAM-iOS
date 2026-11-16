@@ -44,7 +44,7 @@ Livox Mid-360 LiDAR を有線 LAN で iPhone に直結し、歩きながらそ�
 ・iPhone の Ethernet 設定で、Mid-360 に設定した送信先 IP アドレスを手動設定（工場出荷時は 192.168.1.50）
 
 ■ プライバシー
-データの収集・送信は一切行いません。マップや記録はすべて iPhone 内に保存されます。
+データの収集は一切行いません。マップや記録は iPhone 内に保存され、SFTP 送信を操作したときだけ、指定したサーバーへ送られます。
 
 ※ Livox および Mid-360 は各社の商標です。本アプリは Livox とは関係のない独立したアプリです。
 
@@ -109,7 +109,7 @@ REQUIREMENTS
 • In the iPhone's Ethernet settings, set the IP address manually to the Mid-360's destination (host) IP (192.168.1.50 by default)
 
 PRIVACY
-The app collects and sends no data. Maps and recordings stay on your iPhone.
+The app collects no data. Maps and recordings stay on your iPhone and are sent only to a server you choose when you use SFTP upload.
 
 Livox and Mid-360 are trademarks of their respective owners. This app is independent and not affiliated with Livox.
 

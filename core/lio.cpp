@@ -87,10 +87,10 @@ void Lio::reset() {
     P_.setZero();
     P_.diagonal() << Vec3::Constant(1e-4), Vec3::Constant(1e-4), Vec3::Constant(1e-2),
         Vec3::Constant(1e-4), Vec3::Constant(1e-3);
-    map_.clear();
+    map_ = VoxelMap(cfg_.map_res);
     stats_ = LioStats{};
     std::lock_guard<std::mutex> l(out_mtx_);
-    vis_.clear();
+    vis_ = PointStore(cfg_.vis_res);
     loc_state_ = LocState::None;
     loc_fail_ = 0;
     relocalize_ = false;
@@ -418,6 +418,13 @@ void Lio::publish(const std::vector<Vec3>& body, const std::vector<float>& inten
     out_p_ = p_;
     if (mapping || loc_state_ == LocState::Tracking) out_traj_.push_back(p_.cast<float>());
     out_scan_.swap(scan);
+}
+
+void Lio::setConfig(const LioConfig& c) {
+    const bool rebuild_ndt = c.ndt_res != cfg_.ndt_res && !prior_pts_.empty();
+    cfg_ = c;
+    if (cfg_.blind < 0) cfg_.blind = 0;
+    if (rebuild_ndt) ndt_map_.build(prior_pts_, cfg_.ndt_res);
 }
 
 void Lio::setPriorMap(const std::vector<Eigen::Vector3f>& pts, const std::vector<float>& intensity) {

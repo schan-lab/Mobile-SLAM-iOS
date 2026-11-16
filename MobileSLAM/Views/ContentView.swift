@@ -68,6 +68,15 @@ struct ContentView: View {
             }
             .preferredColorScheme(.dark)
         }
+        .sheet(isPresented: $model.showBagPicker) {
+            NavigationStack {
+                BagListView { item in
+                    model.showBagPicker = false
+                    model.selectBag(item)
+                }
+            }
+            .preferredColorScheme(.dark)
+        }
         .alert("自己位置推定に切り替え", isPresented: $model.confirmSwitchToLoc) {
             Button("キャンセル", role: .cancel) {}
             Button("切り替える") { model.applyMode(.localization) }
@@ -78,7 +87,7 @@ struct ContentView: View {
             if phase == .active { model.activate() } else if phase == .background { model.deactivate() }
         }
         #if DEBUG
-        .task {   // screenshot hooks: `simctl launch ... -openLatestMap` / `-landscape`
+        .task {   // test hooks: `simctl launch ... -openLatestMap` / `-landscape` / `-resetSftpHosts`
             if ProcessInfo.processInfo.arguments.contains("-landscape"),
                let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 scene.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
@@ -86,6 +95,7 @@ struct ContentView: View {
             if ProcessInfo.processInfo.arguments.contains("-openLatestMap"), let item = MapStore.list().first {
                 path.append(Route.viewer(item))
             }
+            if ProcessInfo.processInfo.arguments.contains("-resetSftpHosts") { SftpHostStore.save([]) }
             if ProcessInfo.processInfo.arguments.contains("-openMid360Network") {
                 path.append(Route.settings)
                 path.append(Route.mid360Network)
@@ -151,6 +161,7 @@ struct ContentView: View {
     private var navButtons: some View {
         HStack(spacing: 8) {
             smallButton("PCD ビューア") { path.append(Route.maps) }
+            smallButton("rosbag") { model.pickBag() }
             smallButton("設定") { path.append(Route.settings) }
         }
     }
@@ -173,6 +184,13 @@ struct ContentView: View {
                 .font(.system(size: 11))
                 .foregroundStyle(model.pickMode ? Theme.orange : Theme.textDim)
                 .multilineTextAlignment(.center)
+            if let bag = model.bag {
+                HStack(spacing: 8) {
+                    PillButton(label: "📼 " + bag.name, height: 40, fontSize: 13) { model.pickBag() }
+                    PillButton(label: L("実機に戻る"), color: Theme.grey, height: 40, fontSize: 13) { model.exitBag() }
+                        .frame(width: 128)
+                }
+            }
             if model.mode == .localization {
                 HStack(spacing: 8) {
                     PillButton(label: model.loadingMap ? L("読み込み中…") : (model.mapName.map { "🗺 \($0)" } ?? L("マップを選択")),
